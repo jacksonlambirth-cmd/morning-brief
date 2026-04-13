@@ -1,0 +1,361 @@
+<\!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief — April 13, 2026</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a; --border: #2e3248;
+    --text: #e2e5f1; --muted: #7b82a0; --blue: #4f8ef7; --purple: #9b72f5;
+    --green: #3ecf8e; --yellow: #f5c842; --red: #f56565; --orange: #f5a442;
+  }
+  body { background:var(--bg); color:var(--text); font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; font-size:14px; line-height:1.6; padding-bottom:60px; }
+  .stat-bar { background:var(--surface); border-bottom:1px solid var(--border); padding:14px 32px; display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+  .stat-chip { display:flex; align-items:center; gap:8px; background:var(--surface2); border:1px solid var(--border); border-radius:20px; padding:6px 14px; font-size:13px; font-weight:500; }
+  .stat-chip .dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .stat-chip .val { font-size:16px; font-weight:700; color:var(--text); margin-left:2px; }
+  .header { background:var(--surface); border-bottom:1px solid var(--border); padding:28px 32px 22px; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; }
+  .header-left h1 { font-size:28px; font-weight:700; color:var(--text); margin-bottom:4px; }
+  .header-left .tagline { font-size:15px; color:var(--muted); }
+  .morning-badge { background:linear-gradient(135deg,#f5c842 0%,#f5a442 100%); color:#1a1200; font-weight:700; font-size:12px; padding:6px 14px; border-radius:20px; white-space:nowrap; letter-spacing:.5px; text-transform:uppercase; }
+  .incident-banner { background:linear-gradient(135deg,rgba(245,101,101,.15) 0%,rgba(245,101,101,.05) 100%); border:1px solid rgba(245,101,101,.4); border-radius:10px; padding:14px 20px; margin:24px 32px 0; display:flex; align-items:flex-start; gap:12px; }
+  .incident-banner .icon { font-size:22px; margin-top:1px; }
+  .incident-banner .content { flex:1; }
+  .incident-banner .content strong { color:var(--red); font-size:14px; }
+  .incident-banner .content p { color:var(--text); font-size:13px; margin-top:3px; }
+  .sev-badge { background:var(--red); color:white; font-weight:700; font-size:11px; padding:3px 10px; border-radius:12px; letter-spacing:.5px; flex-shrink:0; margin-top:2px; }
+  .page-body { max-width:1200px; margin:0 auto; padding:0 32px; }
+  .section-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:var(--muted); margin:32px 0 14px; display:flex; align-items:center; gap:8px; }
+  .section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px 20px; margin-bottom:12px; }
+  .card:last-child { margin-bottom:0; }
+  .card-header { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:8px; }
+  .card-header .sender { font-weight:600; font-size:14px; }
+  .card-header .subject { color:var(--muted); font-size:13px; margin-top:2px; }
+  .card-body { color:var(--muted); font-size:13px; line-height:1.55; }
+  .card-body a { color:var(--blue); }
+  .chip { display:inline-block; font-size:11px; font-weight:600; padding:3px 9px; border-radius:10px; white-space:nowrap; letter-spacing:.3px; flex-shrink:0; }
+  .chip-red    { background:rgba(245,101,101,.18); color:var(--red); }
+  .chip-yellow { background:rgba(245,200,66,.18);  color:var(--yellow); }
+  .chip-blue   { background:rgba(79,142,247,.18);  color:var(--blue); }
+  .chip-green  { background:rgba(62,207,142,.18);  color:var(--green); }
+  .chip-purple { background:rgba(155,114,245,.18); color:var(--purple); }
+  .chip-orange { background:rgba(245,164,66,.18);  color:var(--orange); }
+  .chip-muted  { background:rgba(123,130,160,.18); color:var(--muted); }
+  .timeline { position:relative; padding-left:22px; }
+  .timeline::before { content:''; position:absolute; left:7px; top:8px; bottom:8px; width:2px; background:var(--border); }
+  .tl-item { position:relative; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:12px; }
+  .tl-item:last-child { margin-bottom:0; }
+  .tl-item.conflict-item { border-color:rgba(245,101,101,.4); }
+  .tl-dot { position:absolute; left:-22px; top:22px; width:14px; height:14px; border-radius:50%; border:2px solid var(--bg); }
+  .tl-dot.purple { background:var(--purple); }
+  .tl-dot.blue   { background:var(--blue); }
+  .tl-dot.orange { background:var(--orange); }
+  .tl-dot.red    { background:var(--red); }
+  .tl-dot.green  { background:var(--green); }
+  .tl-time { font-size:12px; font-weight:600; color:var(--muted); letter-spacing:.3px; margin-bottom:4px; }
+  .tl-title { font-size:15px; font-weight:600; color:var(--text); margin-bottom:4px; }
+  .tl-attendees { font-size:12px; color:var(--muted); margin-bottom:8px; }
+  .tl-tags { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
+  .tl-prep { background:var(--surface2); border-left:3px solid var(--yellow); border-radius:0 6px 6px 0; padding:8px 12px; font-size:12px; margin-top:8px; }
+  .tl-prep strong { display:block; color:var(--yellow); margin-bottom:2px; font-size:11px; text-transform:uppercase; letter-spacing:.5px; }
+  .tl-prep span { color:var(--text); }
+  .priority-list { list-style:none; }
+  .priority-item { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:10px; display:flex; gap:14px; align-items:flex-start; }
+  .priority-item:last-child { margin-bottom:0; }
+  .priority-num { width:28px; height:28px; border-radius:50%; background:var(--surface2); border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--blue); flex-shrink:0; margin-top:1px; }
+  .priority-content .title { font-size:14px; font-weight:600; color:var(--text); margin-bottom:3px; }
+  .priority-content .why { font-size:13px; color:var(--muted); line-height:1.55; }
+  .draft-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:16px; }
+  .draft-card:last-child { margin-bottom:0; }
+  .draft-header { background:var(--surface2); border-bottom:1px solid var(--border); padding:12px 18px; display:flex; gap:16px; flex-wrap:wrap; align-items:center; }
+  .draft-header .field { font-size:13px; }
+  .draft-header .field .label { color:var(--muted); font-weight:500; margin-right:6px; }
+  .draft-header .field .value { color:var(--text); font-weight:600; }
+  .draft-body { padding:18px 20px; font-size:14px; color:var(--text); line-height:1.7; white-space:pre-wrap; font-family:system-ui,-apple-system,sans-serif; }
+</style>
+</head>
+<body>
+
+<div class="stat-bar">
+  <div class="stat-chip"><div class="dot" style="background:var(--purple)"></div><span>Meetings Today</span><span class="val">5</span></div>
+  <div class="stat-chip"><div class="dot" style="background:var(--yellow)"></div><span>Unread Emails</span><span class="val">8</span></div>
+  <div class="stat-chip"><div class="dot" style="background:var(--blue)"></div><span>Slack Threads</span><span class="val">4</span></div>
+  <div class="stat-chip"><div class="dot" style="background:var(--orange)"></div><span>Action Items</span><span class="val">7</span></div>
+  <div class="stat-chip"><div class="dot" style="background:var(--green)"></div><span>Response Drafts</span><span class="val">3</span></div>
+</div>
+
+<div class="header">
+  <div class="header-left">
+    <h1>&#9728;&#65039; Good morning, Jackson.</h1>
+    <div class="tagline">Monday, April 13, 2026 &nbsp;&middot;&nbsp; Heavy meeting day &mdash; 5 calls, back-to-back from 10&ndash;12:30pm, plus a live SEV-1 incident in progress.</div>
+  </div>
+  <div class="morning-badge">&#9728;&#65039; Morning Brief</div>
+</div>
+
+<div style="max-width:1200px;margin:0 auto;padding:0 32px;">
+  <div class="incident-banner">
+    <div class="icon">&#128680;</div>
+    <div class="content">
+      <strong>ACTIVE INCIDENT: Reporting not loading for locations in the Legacy App</strong>
+      <p>Cody Clifton identified a Snowflake data type issue (NUMBER(38,0) predicate on AD.ACTIVE) &mdash; likely from a recent DB upgrade. Tableau extract jobs failing since ~4:58 AM. Engineering war room Zoom is open. Geoff Shauger, Matt Curtis, Cody Clifton, Nate Silva, and Stephen Hornbrook are all engaged. <a href="https://app.datadoghq.com/incidents/13/timeline" style="color:var(--red);">Datadog Incident #13 &rarr;</a></p>
+    </div>
+    <div class="sev-badge">SEV-1</div>
+  </div>
+</div>
+
+<div class="page-body">
+
+  <div class="section-title">&#128197; Today&#39;s Schedule</div>
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-dot purple"></div>
+      <div class="tl-time">8:00 &ndash; 9:00 AM MST</div>
+      <div class="tl-title">Salesforce</div>
+      <div class="tl-attendees">Solo / No external attendees</div>
+      <div class="tl-tags">
+        <span class="chip chip-purple">Internal</span>
+        <span class="chip chip-muted">Recurring</span>
+      </div>
+      <div class="tl-prep"><strong>&#9889; Prep</strong><span>Use this window to check in on the SEV-1 incident status and review any deals that could be impacted by reporting being down before your external meetings start at 10am.</span></div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot blue"></div>
+      <div class="tl-time">10:00 &ndash; 10:30 AM MST</div>
+      <div class="tl-title">CatalystIQ + Stellantis Debrief</div>
+      <div class="tl-attendees">Wayne Pritzker (organizer)</div>
+      <div class="tl-tags">
+        <span class="chip chip-blue">Partner</span>
+        <span class="chip chip-yellow">&#9888; Needs RSVP</span>
+      </div>
+      <div class="tl-prep"><strong>&#9889; Prep</strong><span>You haven&#39;t accepted this invite yet &mdash; RSVP and review what Wayne expects from this debrief. Understand your Stellantis relationship context. Starts precisely at 10am; next meeting is at 10:30 with zero buffer.</span></div>
+    </div>
+
+    <div class="tl-item conflict-item">
+      <div class="tl-dot orange"></div>
+      <div class="tl-time">10:30 &ndash; 11:00 AM MST &nbsp; &#9888; Immediate back-to-back</div>
+      <div class="tl-title">L2T + Foureyes | Pilot</div>
+      <div class="tl-attendees">icarry@l2tmedia.com, Aaron Bickart, dweisman@l2tmedia.com &middot; 2 declined (Cameron Dieter, jkaufman@l2tmedia.com)</div>
+      <div class="tl-tags">
+        <span class="chip chip-orange">Client</span>
+        <span class="chip chip-red">&#9888; Back-to-Back</span>
+      </div>
+      <div class="tl-prep"><strong>&#9889; Prep</strong><span>Immediately follows Stellantis debrief &mdash; plan your exit at 10:28. Zoom ready: foureyes-io.zoom.us/j/85094029442 (PW: 892504). Review pilot scope and L2T&#39;s key ask so you can lead the call confidently with zero ramp-up time.</span></div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot purple"></div>
+      <div class="tl-time">11:00 AM &ndash; 12:30 PM MST</div>
+      <div class="tl-title">Revenue Leadership Meeting</div>
+      <div class="tl-attendees">Jimmy Sharp (organizer) &middot; Catherine Davidson, Tracy Fry, Zoe Altman, Matt Inda, Jason Hendricks, Nolan Williams, Aaron Bickart, Cameron Dieter</div>
+      <div class="tl-tags">
+        <span class="chip chip-purple">Internal</span>
+        <span class="chip chip-muted">Recurring</span>
+      </div>
+      <div class="tl-prep"><strong>&#9889; Prep</strong><span>Skim the rolling agenda doc linked on the invite before joining. Plan to bring a quick SEV-1 status update for leadership visibility. Lithia consent progress and the Stream Companies partnership are likely agenda topics.</span></div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot blue"></div>
+      <div class="tl-time">2:00 &ndash; 2:30 PM MST</div>
+      <div class="tl-title">Foureyes Demo</div>
+      <div class="tl-attendees">Gunnar Doucet (leetilford.com), Aaron Bickart</div>
+      <div class="tl-tags">
+        <span class="chip chip-blue">BizDev</span>
+        <span class="chip chip-green">Ad Hoc</span>
+      </div>
+      <div class="tl-prep"><strong>&#9889; Prep</strong><span>Research Leet Ilford and Gunnar Doucet before 2pm &mdash; understand their vertical and use case so the demo resonates. Brief Aaron Bickart beforehand. Zoom: foureyes-io.zoom.us/j/82988676447 (PW: 314008).</span></div>
+    </div>
+
+  </div>
+
+  <div class="section-title">&#128236; Emails Needing Attention</div>
+
+  <div class="card">
+    <div class="card-header">
+      <div><div class="sender">Drew Diehl &mdash; Stream Companies</div><div class="subject">Re: April in person dates</div></div>
+      <span class="chip chip-yellow">&#9888;&#65039; FYI / Reply Suggested</span>
+    </div>
+    <div class="card-body">Drew replied this morning confirming the Thursday Stream + Foureyes sync is booked (April 16, 10:30 AM), but said in-person scheduling needs to slip due to internal projects. Acknowledge and keep the relationship warm &mdash; a draft is ready below.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div><div class="sender">Marci Trares &mdash; Activator.ai</div><div class="subject">Re: Lithia Store Onboarding Restriction in place &mdash; Act Now</div></div>
+      <span class="chip chip-red">&#128293; Reply Today</span>
+    </div>
+    <div class="card-body">Activator.ai messaged today on the Pieter Hogeveen compliance thread asking for their integration timeline. Ali Wilkerson has been managing vendor responses &mdash; flag to her or send a brief holding reply to Pieter&#39;s thread.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div><div class="sender">Chip Bergquist &mdash; TraXtion</div><div class="subject">RE: TraXtion: Production Credentials | Consent Manager</div></div>
+      <span class="chip chip-red">&#128293; Reply Today</span>
+    </div>
+    <div class="card-body">Chip sent a list of Lithia dealer locations in their system this morning and is asking what next steps are needed to start receiving consent data. Needs a response from Ali (or you) to unblock their production work &mdash; draft ready below.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div><div class="sender">Scott Hendrick &mdash; Better Car People</div><div class="subject">Re: Better Car People: Test environment credentials | Consent Manager</div></div>
+      <span class="chip chip-yellow">&#9888;&#65039; Monitor</span>
+    </div>
+    <div class="card-body">Scott confirmed they&#39;re trying the latest credentials as of this morning &mdash; no confirmation of resolution yet. Ali owns the thread; keep an eye out for a follow-up before EOD.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div><div class="sender">Meredith Steiner &mdash; Foureyes</div><div class="subject">Re: Epsilon - Lithia Consent Agreement</div></div>
+      <span class="chip chip-yellow">&#9888;&#65039; FYI</span>
+    </div>
+    <div class="card-body">Meredith confirmed to Epsilon (contact: Anne Rambow) that they haven&#39;t started the Lithia-required Consent Management integration. John Rule (Lithia) is looped in. No immediate action needed from you &mdash; Meredith is managing.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div><div class="sender">ZoomInfo Alert</div><div class="subject">&#128680; Buyer Job Change at Impel</div></div>
+      <span class="chip chip-blue">Sales Intel</span>
+    </div>
+    <div class="card-body">Justin Grogan was promoted to Manager, Major Accounts (East) at Impel &mdash; a previously engaged contact. A quick congratulations note is a natural conversation reopener with a newly elevated decision-maker.</div>
+  </div>
+
+  <div class="section-title">&#128172; Slack Overnight &amp; This Morning</div>
+
+  <div class="card">
+    <div class="card-header">
+      <div><div class="sender">#incident-13 &middot; Cody Clifton, Matt Curtis, Geoff Shauger, Nate Silva</div></div>
+      <span class="chip chip-red">&#128680; Live Incident</span>
+    </div>
+    <div class="card-body">SEV-1: Tableau reporting down for Legacy App locations. Root cause identified as Snowflake data type mismatch (NUMBER(38,0) predicate on AD.ACTIVE), introduced by a DB upgrade. War room Zoom active. Get a status update before the Revenue Leadership Meeting at 11am and flag for leadership. <a href="https://app.datadoghq.com/incidents/13/timeline">Datadog Incident #13 &rarr;</a></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div><div class="sender">#consent-vendor-management &middot; Meredith Steiner (7:14 AM)</div></div>
+      <span class="chip chip-yellow">Needs Your Response</span>
+    </div>
+    <div class="card-body">Meredith is asking for help assessing J&amp;L Marketing&#39;s status: John Rule (Lithia) sent her messages she&#39;s not sure how to reply to, and J&amp;L said &ldquo;the Foureyes team is working through validating our test environment &mdash; is there an agreement we need to sign?&rdquo; A draft Slack reply is included below.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div><div class="sender">#consent-vendor-management &middot; Ali Wilkerson (7:30 AM)</div></div>
+      <span class="chip chip-green">Good Progress</span>
+    </div>
+    <div class="card-body">Ali confirmed she is actively validating a vendor in test and will send production credentials today or early this week. Consistent with the Lithia compliance sprint &mdash; no action needed, just good signal.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div><div class="sender">#stream-go-live-support &middot; Anne Allison (7:25 AM)</div></div>
+      <span class="chip chip-muted">Monitor</span>
+    </div>
+    <div class="card-body">Anne Allison asked Abby Kaplan for documentation on which Stream clients have scrapable info &mdash; useful context heading into Thursday&#39;s Stream + Foureyes Sync (April 16).</div>
+  </div>
+
+  <div class="section-title">&#127919; Today&#39;s Plan of Attack</div>
+
+  <ul class="priority-list">
+    <li class="priority-item">
+      <div class="priority-num">1</div>
+      <div class="priority-content">
+        <div class="title">Get a SEV-1 status update before 10am external meetings</div>
+        <div class="why">Reporting is broken for Legacy App locations right now. Engineering is on it, but you need current status before walking into the Stellantis Debrief and L2T Pilot calls. Ping Cody Clifton or check #incident channel. Bring a brief update to Revenue Leadership at 11am.</div>
+      </div>
+    </li>
+    <li class="priority-item">
+      <div class="priority-num">2</div>
+      <div class="priority-content">
+        <div class="title">Accept CatalystIQ + Stellantis Debrief invite and prep talking points</div>
+        <div class="why">Your RSVP is still &ldquo;needsAction&rdquo; for the 10am call. Accept it now and do a quick 5-minute context review on Stellantis. Starts sharp at 10:00 with L2T immediately after &mdash; no room to be unprepared.</div>
+      </div>
+    </li>
+    <li class="priority-item">
+      <div class="priority-num">3</div>
+      <div class="priority-content">
+        <div class="title">Research Gunnar Doucet / Leet Ilford before the 2pm Foureyes Demo</div>
+        <div class="why">You set this demo up with Aaron Bickart. A tailored demo lands significantly better than a generic walkthrough. Spend 10 minutes on their company profile and brief Aaron before 2pm.</div>
+      </div>
+    </li>
+    <li class="priority-item">
+      <div class="priority-num">4</div>
+      <div class="priority-content">
+        <div class="title">Reply to Drew Diehl (Stream Companies) &mdash; acknowledge Thursday sync</div>
+        <div class="why">Drew replied this morning confirming Thursday&#39;s booking and deferring in-person plans. Keep the relationship warm and set positive tone for Thursday. Draft below takes 2 minutes.</div>
+      </div>
+    </li>
+    <li class="priority-item">
+      <div class="priority-num">5</div>
+      <div class="priority-content">
+        <div class="title">Coordinate Ali Wilkerson on Activator.ai and TraXtion Lithia consent responses</div>
+        <div class="why">Two vendors need action this morning before you go into back-to-back meetings. Activator.ai wants a timeline; TraXtion sent a dealer list and needs next steps. A 5-minute sync with Ali or a quick Slack message can unblock both.</div>
+      </div>
+    </li>
+    <li class="priority-item">
+      <div class="priority-num">6</div>
+      <div class="priority-content">
+        <div class="title">Reply to Meredith Steiner on J&amp;L Marketing status in #consent-vendor-management</div>
+        <div class="why">Meredith needs context on J&amp;L Marketing&#39;s integration status so she can respond to John Rule (Lithia) correctly. She asked this morning &mdash; a quick Slack reply keeps the chain moving and keeps Lithia informed. Draft below.</div>
+      </div>
+    </li>
+    <li class="priority-item">
+      <div class="priority-num">7</div>
+      <div class="priority-content">
+        <div class="title">Send a quick congratulations to Justin Grogan at Impel (promoted to Manager, Major Accounts East)</div>
+        <div class="why">ZoomInfo flagged this as a previously engaged buyer who just got promoted. A timely, brief congrats is a low-effort, high-value conversation reopener with a newly elevated decision-maker at an active account.</div>
+      </div>
+    </li>
+  </ul>
+
+  <div class="section-title">&#9993;&#65039; Response Drafts &mdash; Ready to Send</div>
+
+  <div class="draft-card">
+    <div class="draft-header">
+      <div class="field"><span class="label">To:</span><span class="value">Drew Diehl &lt;Drew.Diehl@streamcompanies.com&gt;</span></div>
+      <div class="field"><span class="label">CC:</span><span class="value">Jimmy Sharp &lt;jimmy.sharp@foureyes.io&gt;</span></div>
+      <div class="field"><span class="label">Subject:</span><span class="value">Re: April in person dates</span></div>
+      <span class="chip chip-green">Email &middot; Ready to send</span>
+    </div>
+    <div class="draft-body">Hey Drew,
+
+Great to hear from you\! Thursday works perfectly and I'm looking forward to the sync. Totally understand that in-person needs to take a back seat for now — no worries at all. Whenever things settle on your end, we'll find the right window.
+
+See you Thursday at 10:30\!
+
+Best,
+Jackson</div>
+  </div>
+
+  <div class="draft-card">
+    <div class="draft-header">
+      <div class="field"><span class="label">Channel:</span><span class="value">#consent-vendor-management</span></div>
+      <div class="field"><span class="label">Replying to:</span><span class="value">@Meredith Steiner</span></div>
+      <span class="chip chip-blue">Slack &middot; Ready to send</span>
+    </div>
+    <div class="draft-body">Hey Meredith\! Happy to help. J&L Marketing is currently in active test validation with Ali, so they're further along than John Rule's message may have suggested. On the agreement question — they should already have the standard vendor terms in place from enrollment, but Ali can confirm if anything's outstanding. Once test validation clears, Ali will issue their production credentials. Let me know if you need anything else to close the loop with John\!</div>
+  </div>
+
+  <div class="draft-card">
+    <div class="draft-header">
+      <div class="field"><span class="label">To:</span><span class="value">Chip Bergquist &lt;cbergquist@traxtion.com&gt;</span></div>
+      <div class="field"><span class="label">CC:</span><span class="value">Ali Wilkerson &lt;ali.wilkerson@foureyes.io&gt;, consent@foureyes.io</span></div>
+      <div class="field"><span class="label">Subject:</span><span class="value">RE: TraXtion: Production Credentials | Consent Manager</span></div>
+      <span class="chip chip-yellow">Email &middot; Review before sending</span>
+    </div>
+    <div class="draft-body">Hi Chip,
+
+Thank you for sending over the Lithia dealer list — that's exactly what we need to move forward. Ali will review it against our Lithia location records and reach out with next steps for each location to begin receiving consent data in production.
+
+We'll follow up shortly. Thanks for staying on top of this\!
+
+Best,
+Jackson</div>
+  </div>
+
+</div>
+</body>
+</html>

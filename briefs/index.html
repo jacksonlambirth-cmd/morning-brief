@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Morning Brief Archive — Control Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/shared.css">
+<style>
+  html, body { height: 100%; overflow: hidden; }
+
+  .briefs-shell {
+    display: flex;
+    height: calc(100vh - 52px); /* subtract nav height */
+    overflow: hidden;
+  }
+
+  /* ─── Sidebar ─── */
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .sidebar-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--dim);
+    padding: 16px 18px 10px;
+  }
+
+  .brief-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 10px 16px;
+  }
+
+  .brief-list::-webkit-scrollbar { width: 4px; }
+  .brief-list::-webkit-scrollbar-track { background: transparent; }
+  .brief-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .brief-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all .15s ease;
+    border: 1px solid transparent;
+    margin-bottom: 2px;
+    text-decoration: none;
+  }
+
+  .brief-item:hover {
+    background: var(--surface);
+    border-color: var(--border);
+  }
+
+  .brief-item.active {
+    background: var(--accent-glow);
+    border-color: rgba(79,142,247,.3);
+  }
+
+  .date-badge {
+    width: 40px; height: 40px;
+    border-radius: 9px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .brief-item.active .date-badge {
+    background: rgba(79,142,247,.15);
+    border-color: rgba(79,142,247,.3);
+  }
+
+  .date-badge .month {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .date-badge .day {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text);
+  }
+
+  .brief-meta .brief-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .brief-meta .brief-day {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .brief-item.active .brief-label { color: var(--accent); }
+
+  .empty-state {
+    text-align: center;
+    padding: 36px 16px;
+    color: var(--muted);
+  }
+
+  .empty-state .icon { font-size: 28px; margin-bottom: 10px; opacity: 0.5; }
+  .empty-state .msg  { font-size: 12px; line-height: 1.5; }
+
+  /* ─── Main frame ─── */
+  .brief-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .brief-topbar {
+    height: 48px;
+    min-height: 48px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    background: var(--sidebar-bg);
+    gap: 12px;
+  }
+
+  .brief-topbar-date {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  .brief-topbar-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green);
+  }
+
+  .brief-topbar-status .pulse {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(62,207,142,.4); }
+    50%       { opacity: .7; box-shadow: 0 0 0 5px rgba(62,207,142,0); }
+  }
+
+  .topbar-actions { display: flex; gap: 6px; }
+
+  .btn-icon {
+    width: 32px; height: 32px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all .15s;
+    font-size: 15px;
+    text-decoration: none;
+  }
+
+  .btn-icon:hover {
+    border-color: var(--border-light);
+    color: var(--text);
+    background: var(--border);
+  }
+
+  .frame-wrap {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .frame-wrap iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: var(--bg);
+  }
+
+  .loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    z-index: 10;
+    transition: opacity .3s ease;
+  }
+
+  .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+
+  .loader-ring {
+    width: 32px; height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text { font-size: 13px; color: var(--muted); font-weight: 500; }
+
+  .welcome {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--muted);
+    padding: 40px;
+    text-align: center;
+  }
+
+  .welcome .icon { font-size: 42px; opacity: 0.4; }
+  .welcome h2 { font-size: 18px; font-weight: 600; color: var(--text); }
+  .welcome p  { font-size: 13px; max-width: 340px; line-height: 1.6; }
+
+  /* ─── Mobile ─── */
+  .mobile-toggle {
+    display: none;
+    position: fixed;
+    bottom: 20px; right: 20px;
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(79,142,247,.4);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 49;
+    display: none;
+  }
+
+  .backdrop.show { display: block; }
+
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed;
+      left: -260px; top: 52px;
+      z-index: 50;
+      transition: left .25s ease;
+      box-shadow: 4px 0 24px rgba(0,0,0,.5);
+      height: calc(100vh - 52px);
+    }
+    .sidebar.open { left: 0; }
+    .mobile-toggle { display: flex; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="cc-nav">
+  <a href="../index.html" class="cc-nav-logo">
+    <div class="logo-icon">⚡</div>
+    <span class="logo-text">Control Center</span>
+  </a>
+  <div class="cc-nav-links">
+    <a href="../index.html" class="cc-nav-link"><span class="nav-icon">🏠</span> Home</a>
+    <a href="../briefs/index.html" class="cc-nav-link active"><span class="nav-icon">☀️</span> Morning Brief</a>
+    <a href="../projects/index.html" class="cc-nav-link"><span class="nav-icon">🚀</span> Projects</a>
+    <a href="../pipeline/index.html" class="cc-nav-link"><span class="nav-icon">📈</span> Pipeline</a>
+    <a href="../ai/index.html" class="cc-nav-link"><span class="nav-icon">🤖</span> AI</a>
+    <a href="../links/index.html" class="cc-nav-link"><span class="nav-icon">🔗</span> Quick Links</a>
+  </div>
+</nav>
+
+<div class="backdrop" id="backdrop" onclick="toggleSidebar()"></div>
+
+<div class="briefs-shell">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section-label">Briefings</div>
+    <div class="brief-list" id="briefList">
+      <div class="empty-state">
+        <div class="icon">📭</div>
+        <div class="msg">Loading briefings…</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="brief-main">
+    <div class="brief-topbar">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span class="brief-topbar-date" id="topbarDate">—</span>
+        <span class="brief-topbar-status" id="topbarStatus" style="display:none;">
+          <span class="pulse"></span>Latest
+        </span>
+      </div>
+      <div class="topbar-actions">
+        <a id="openTabBtn" class="btn-icon" title="Open in new tab" href="#" target="_blank">↗</a>
+        <button class="btn-icon" title="Refresh" onclick="loadManifest()">⟳</button>
+      </div>
+    </div>
+
+    <div class="frame-wrap" id="frameWrap">
+      <div class="welcome" id="welcomeState">
+        <div class="icon">☀️</div>
+        <h2>Morning Briefings</h2>
+        <p>Select a date from the sidebar, or click the latest entry to load today's brief.</p>
+      </div>
+      <div class="loading-overlay hidden" id="loader">
+        <div class="loader-ring"></div>
+        <div class="loading-text">Loading briefing…</div>
+      </div>
+      <iframe id="briefFrame" style="display:none;" sandbox="allow-same-origin"></iframe>
+    </div>
+  </div>
+
+</div>
+
+<button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+
+<script>
+  let briefings = [], currentIndex = -1;
+
+  const briefList    = document.getElementById('briefList');
+  const briefFrame   = document.getElementById('briefFrame');
+  const welcomeState = document.getElementById('welcomeState');
+  const loader       = document.getElementById('loader');
+  const topbarDate   = document.getElementById('topbarDate');
+  const topbarStatus = document.getElementById('topbarStatus');
+  const openTabBtn   = document.getElementById('openTabBtn');
+
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('backdrop').classList.toggle('show');
+  }
+
+  function getMonth(d) {
+    return new Date(d + 'T12:00:00').toLocaleDateString('en-US',{month:'short'}).toUpperCase();
+  }
+
+  function getDay(d) {
+    return new Date(d + 'T12:00:00').getDate();
+  }
+
+  function getDayName(d) {
+    return new Date(d + 'T12:00:00').toLocaleDateString('en-US',{weekday:'long'});
+  }
+
+  function renderList() {
+    if (!briefings.length) {
+      briefList.innerHTML = `<div class="empty-state"><div class="icon">📭</div><div class="msg">No briefings yet.<br>They'll appear here after your first scheduled run.</div></div>`;
+      return;
+    }
+    briefList.innerHTML = briefings.map((b,i) => `
+      <div class="brief-item ${i===currentIndex?'active':''}" onclick="loadBrief(${i})">
+        <div class="date-badge">
+          <span class="month">${getMonth(b.date)}</span>
+          <span class="day">${getDay(b.date)}</span>
+        </div>
+        <div class="brief-meta">
+          <div class="brief-label">${b.label||b.date}</div>
+          <div class="brief-day">${getDayName(b.date)}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function loadBrief(index) {
+    currentIndex = index;
+    const b = briefings[index];
+    welcomeState.style.display = 'none';
+    briefFrame.style.display = 'block';
+    loader.classList.remove('hidden');
+    briefFrame.onload = () => loader.classList.add('hidden');
+    briefFrame.src = b.file;
+    topbarDate.textContent = b.label || b.date;
+    topbarStatus.style.display = index === 0 ? 'flex' : 'none';
+    openTabBtn.href = b.file;
+    renderList();
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('backdrop').classList.remove('show');
+  }
+
+  async function loadManifest() {
+    try {
+      const resp = await fetch('../manifest.json?t=' + Date.now());
+      const data = await resp.json();
+      briefings = (data.briefings||[]).sort((a,b)=>b.date.localeCompare(a.date));
+      renderList();
+      if (briefings.length > 0 && currentIndex === -1) loadBrief(0);
+    } catch(e) {
+      briefList.innerHTML = `<div class="empty-state"><div class="icon">⚠️</div><div class="msg">Couldn't load manifest.json.</div></div>`;
+    }
+  }
+
+  setInterval(loadManifest, 5*60*1000);
+  loadManifest();
+</script>
+
+</body>
+</html>

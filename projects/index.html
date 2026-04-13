@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Active Projects — Control Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/shared.css">
+<style>
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 22px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: border-color .15s;
+  }
+
+  .project-card:hover { border-color: var(--border-light); }
+
+  .project-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .project-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.2px;
+    margin-bottom: 4px;
+  }
+
+  .project-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .project-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .project-row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .project-row-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    color: var(--dim);
+    width: 72px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .project-row-value {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .contact-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .contact-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 10px;
+  }
+
+  .contact-chip::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .project-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .updated-at {
+    font-size: 11px;
+    color: var(--dim);
+    font-family: var(--mono);
+  }
+
+  /* status badge variants */
+  .badge-active   { background: rgba(62,207,142,.15);  color: var(--green);  border: 1px solid rgba(62,207,142,.25); }
+  .badge-progress { background: rgba(79,142,247,.15);  color: var(--accent); border: 1px solid rgba(79,142,247,.25); }
+  .badge-paused   { background: rgba(245,200,66,.15);  color: var(--gold);   border: 1px solid rgba(245,200,66,.25); }
+  .badge-done     { background: rgba(107,113,148,.12); color: var(--muted);  border: 1px solid rgba(107,113,148,.2); }
+
+  .note-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--muted);
+    border-left: 3px solid var(--accent);
+    margin-top: 8px;
+  }
+
+  @media (max-width: 700px) {
+    .project-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="cc-nav">
+  <a href="../index.html" class="cc-nav-logo">
+    <div class="logo-icon">⚡</div>
+    <span class="logo-text">Control Center</span>
+  </a>
+  <div class="cc-nav-links">
+    <a href="../index.html" class="cc-nav-link"><span class="nav-icon">🏠</span> Home</a>
+    <a href="../briefs/latest.html" class="cc-nav-link"><span class="nav-icon">☀️</span> Morning Brief</a>
+    <a href="../projects/index.html" class="cc-nav-link active"><span class="nav-icon">🚀</span> Projects</a>
+    <a href="../pipeline/index.html" class="cc-nav-link"><span class="nav-icon">📈</span> Pipeline</a>
+    <a href="../ai/index.html" class="cc-nav-link"><span class="nav-icon">🤖</span> AI</a>
+    <a href="../links/index.html" class="cc-nav-link"><span class="nav-icon">🔗</span> Quick Links</a>
+  </div>
+</nav>
+
+<div class="cc-page">
+
+  <div class="cc-page-header">
+    <h1>🚀 Active Projects</h1>
+    <p>Current partner and pilot engagements — status, contacts, and sprint progress.</p>
+  </div>
+
+  <div class="section-label">In Flight</div>
+
+  <div class="project-grid">
+
+    <!-- Force Marketing -->
+    <div class="project-card">
+      <div class="project-header">
+        <div>
+          <div class="project-name">Force Marketing</div>
+          <div class="project-subtitle">Dealer support and reporting sprint</div>
+        </div>
+        <span class="chip badge-active">● Active</span>
+      </div>
+      <div class="project-body">
+        <div class="project-row">
+          <span class="project-row-label">Focus</span>
+          <span class="project-row-value">Reporting infrastructure, dealer-level support workflows, and partner sprint execution with the Force team.</span>
+        </div>
+        <div class="project-row">
+          <span class="project-row-label">Contacts</span>
+          <div class="contact-chips">
+            <span class="contact-chip">Cameron Dieter</span>
+            <span class="contact-chip">Wayne</span>
+            <span class="contact-chip">Cody</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span class="updated-at" id="force-updated">—</span>
+        <a href="../links/index.html" class="btn btn-ghost" style="font-size:12px; padding: 5px 12px;">Open in Salesforce ↗</a>
+      </div>
+    </div>
+
+    <!-- Strong Automotive -->
+    <div class="project-card">
+      <div class="project-header">
+        <div>
+          <div class="project-name">Strong Automotive</div>
+          <div class="project-subtitle">Pilot onboarding — Snowflake, UI access, reporting sprint</div>
+        </div>
+        <span class="chip badge-progress">● In Progress</span>
+      </div>
+      <div class="project-body">
+        <div class="project-row">
+          <span class="project-row-label">Focus</span>
+          <span class="project-row-value">Snowflake data share setup, UI access provisioning for pilot group, and kicking off the reporting sprint.</span>
+        </div>
+        <div class="project-row">
+          <span class="project-row-label">Next</span>
+          <span class="project-row-value">Confirm Snowflake share is live, get UI logins to pilot users, schedule reporting sprint kickoff.</span>
+        </div>
+        <div class="project-row">
+          <span class="project-row-label">Contacts</span>
+          <div class="contact-chips">
+            <span class="contact-chip">Strong Auto team</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span class="updated-at" id="strong-updated">—</span>
+        <a href="https://foureyes.lightning.force.com" target="_blank" rel="noopener" class="btn btn-ghost" style="font-size:12px; padding: 5px 12px;">Salesforce ↗</a>
+      </div>
+    </div>
+
+    <!-- L2T Media -->
+    <div class="project-card">
+      <div class="project-header">
+        <div>
+          <div class="project-name">L2T Media</div>
+          <div class="project-subtitle">Pilot program</div>
+        </div>
+        <span class="chip badge-progress">● In Progress</span>
+      </div>
+      <div class="project-body">
+        <div class="project-row">
+          <span class="project-row-label">Focus</span>
+          <span class="project-row-value">Foureyes + L2T pilot program — active engagement with icarry@l2tmedia.com, Aaron Bickart, and dweisman@l2tmedia.com. Zoom cadence running.</span>
+        </div>
+        <div class="project-row">
+          <span class="project-row-label">Contacts</span>
+          <div class="contact-chips">
+            <span class="contact-chip">Aaron Bickart</span>
+            <span class="contact-chip">icarry@l2tmedia</span>
+            <span class="contact-chip">dweisman@l2tmedia</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-footer">
+        <span class="updated-at" id="l2t-updated">—</span>
+        <a href="https://foureyes.lightning.force.com" target="_blank" rel="noopener" class="btn btn-ghost" style="font-size:12px; padding: 5px 12px;">Salesforce ↗</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note-box">
+    💡 This page is refreshed weekly via a Cowork scheduled task that reads Slack and updates project statuses automatically. You can also trigger a manual refresh from the <a href="../ai/index.html" style="color: var(--accent);">AI Projects</a> page.
+  </div>
+
+</div>
+
+<script>
+  // Stamp "last updated" with today's date on load
+  const today = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Denver',
+    month: 'short', day: 'numeric', year: 'numeric'
+  }).format(new Date());
+
+  ['force-updated','strong-updated','l2t-updated'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = 'Updated ' + today;
+  });
+</script>
+
+</body>
+</html>

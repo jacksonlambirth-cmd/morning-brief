@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quick Links — Control Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/shared.css">
+<style>
+  .link-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .link-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 18px;
+    text-decoration: none;
+    transition: all .15s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .link-card:hover {
+    border-color: var(--border-light);
+    background: var(--surface2);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0,0,0,.3);
+  }
+
+  .link-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+  }
+
+  .link-info { flex: 1; min-width: 0; }
+
+  .link-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .link-desc {
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .link-arrow {
+    font-size: 14px;
+    color: var(--dim);
+    transition: color .15s, transform .15s;
+    flex-shrink: 0;
+  }
+
+  .link-card:hover .link-arrow {
+    color: var(--text);
+    transform: translate(2px, -2px);
+  }
+
+  /* Color accents per category */
+  .link-card.slack .link-icon    { background: rgba(74,21,75,.3);  border-color: rgba(74,21,75,.5); }
+  .link-card.gmail .link-icon    { background: rgba(234,67,53,.15); border-color: rgba(234,67,53,.25); }
+  .link-card.sf .link-icon       { background: rgba(0,161,224,.15); border-color: rgba(0,161,224,.25); }
+  .link-card.dd .link-icon       { background: rgba(99,0,139,.15);  border-color: rgba(99,0,139,.25); }
+  .link-card.gcal .link-icon     { background: rgba(26,115,232,.15);border-color: rgba(26,115,232,.25); }
+  .link-card.gdrive .link-icon   { background: rgba(52,168,83,.15); border-color: rgba(52,168,83,.25); }
+  .link-card.atlassian .link-icon{ background: rgba(0,82,204,.15);  border-color: rgba(0,82,204,.25); }
+
+  @media (max-width: 600px) {
+    .link-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="cc-nav">
+  <a href="../index.html" class="cc-nav-logo">
+    <div class="logo-icon">⚡</div>
+    <span class="logo-text">Control Center</span>
+  </a>
+  <div class="cc-nav-links">
+    <a href="../index.html" class="cc-nav-link"><span class="nav-icon">🏠</span> Home</a>
+    <a href="../briefs/latest.html" class="cc-nav-link"><span class="nav-icon">☀️</span> Morning Brief</a>
+    <a href="../projects/index.html" class="cc-nav-link"><span class="nav-icon">🚀</span> Projects</a>
+    <a href="../pipeline/index.html" class="cc-nav-link"><span class="nav-icon">📈</span> Pipeline</a>
+    <a href="../ai/index.html" class="cc-nav-link"><span class="nav-icon">🤖</span> AI</a>
+    <a href="../links/index.html" class="cc-nav-link active"><span class="nav-icon">🔗</span> Quick Links</a>
+  </div>
+</nav>
+
+<div class="cc-page">
+
+  <div class="cc-page-header">
+    <h1>🔗 Quick Links</h1>
+    <p>One-click shortcuts to your most-used tools and platforms.</p>
+  </div>
+
+  <!-- Communication -->
+  <div class="section-label">Communication</div>
+  <div class="link-grid">
+
+    <a class="link-card slack" href="https://app.slack.com" target="_blank" rel="noopener">
+      <div class="link-icon">💬</div>
+      <div class="link-info">
+        <div class="link-name">Slack</div>
+        <div class="link-desc">app.slack.com</div>
+      </div>
+      <span class="link-arrow">↗</span>
+    </a>
+
+    <a class="link-card gmail" href="https://mail.google.com" target="_blank" rel="noopener">
+      <div class="link-icon">📧</div>
+      <div class="link-info">
+        <div class="link-name">Gmail</div>
+        <div class="link-desc">mail.google.com</div>
+      </div>
+      <span class="link-arrow">↗</span>
+    </a>
+
+  </div>
+
+  <!-- CRM & Data -->
+  <div class="section-label">CRM &amp; Data</div>
+  <div class="link-grid">
+
+    <a class="link-card sf" href="https://foureyes.lightning.force.com/lightning/r/Report/00OVp0000059ehhMAA/view" target="_blank" rel="noopener">
+      <div class="link-icon">☁️</div>
+      <div class="link-info">
+        <div class="link-name">Salesforce</div>
+        <div class="link-desc">Pipeline &amp; Reports Dashboard</div>
+      </div>
+      <span class="link-arrow">↗</span>
+    </a>
+
+    <a class="link-card dd" href="https://app.datadoghq.com" target="_blank" rel="noopener">
+      <div class="link-icon">🐶</div>
+      <div class="link-info">
+        <div class="link-name">Datadog</div>
+        <div class="link-desc">Monitoring &amp; incidents</div>
+      </div>
+      <span class="link-arrow">↗</span>
+    </a>
+
+  </div>
+
+  <!-- Productivity -->
+  <div class="section-label">Productivity</div>
+  <div class="link-grid">
+
+    <a class="link-card gcal" href="https://calendar.google.com" target="_blank" rel="noopener">
+      <div class="link-icon">📅</div>
+      <div class="link-info">
+        <div class="link-name">Google Calendar</div>
+        <div class="link-desc">calendar.google.com</div>
+      </div>
+      <span class="link-arrow">↗</span>
+    </a>
+
+    <a class="link-card gdrive" href="https://drive.google.com" target="_blank" rel="noopener">
+      <div class="link-icon">📁</div>
+      <div class="link-info">
+        <div class="link-name">Google Drive</div>
+        <div class="link-desc">drive.google.com</div>
+      </div>
+      <span class="link-arrow">↗</span>
+    </a>
+
+  </div>
+
+  <!-- Internal -->
+  <div class="section-label">Internal</div>
+  <div class="link-grid">
+
+    <a class="link-card atlassian" href="https://foureyes.atlassian.net/wiki/home" target="_blank" rel="noopener">
+      <div class="link-icon">📖</div>
+      <div class="link-info">
+        <div class="link-name">Confluence</div>
+        <div class="link-desc">foureyes.atlassian.net — Wiki &amp; docs</div>
+      </div>
+      <span class="link-arrow">↗</span>
+    </a>
+
+    <a class="link-card atlassian" href="https://foureyes.atlassian.net/jira" target="_blank" rel="noopener">
+      <div class="link-icon">🎯</div>
+      <div class="link-info">
+        <div class="link-name">Jira</div>
+        <div class="link-desc">foureyes.atlassian.net — Issues &amp; sprints</div>
+      </div>
+      <span class="link-arrow">↗</span>
+    </a>
+
+  </div>
+
+</div>
+
+</body>
+</html>

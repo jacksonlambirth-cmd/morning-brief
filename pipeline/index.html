@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pipeline Snapshot — Control Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles/shared.css">
+<style>
+  /* Summary bar */
+  .summary-bar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .summary-card {
+    flex: 1;
+    min-width: 160px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .summary-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+
+  .summary-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--mono);
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  .summary-sub {
+    font-size: 12px;
+    color: var(--dim);
+  }
+
+  /* SF CTA */
+  .sf-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: linear-gradient(135deg, rgba(0,161,224,.08) 0%, rgba(0,161,224,.03) 100%);
+    border: 1px solid rgba(0,161,224,.25);
+    border-radius: var(--radius);
+    padding: 18px 22px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .sf-cta-text { flex: 1; }
+  .sf-cta-text strong { font-size: 15px; font-weight: 700; color: var(--text); display: block; margin-bottom: 3px; }
+  .sf-cta-text span   { font-size: 13px; color: var(--muted); }
+
+  /* Stage pipeline */
+  .pipeline-stages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+
+  .stage-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: border-color .15s;
+  }
+
+  .stage-row:hover { border-color: var(--border-light); }
+
+  .stage-label {
+    width: 160px;
+    flex-shrink: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .stage-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .stage-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width .6s ease;
+  }
+
+  .stage-count {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--mono);
+    width: 32px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .stage-value {
+    font-size: 12px;
+    color: var(--muted);
+    width: 80px;
+    text-align: right;
+    flex-shrink: 0;
+    font-family: var(--mono);
+  }
+
+  /* Deal cards */
+  .deal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .deal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .deal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .deal-company { font-size: 14px; font-weight: 700; color: var(--text); }
+  .deal-type    { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .deal-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .deal-meta-item {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .deal-meta-item strong { color: var(--text); font-size: 13px; }
+
+  /* Footer note */
+  .pipeline-note {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 700px) {
+    .stage-label { width: 110px; }
+    .stage-value { display: none; }
+    .deal-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="cc-nav">
+  <a href="../index.html" class="cc-nav-logo">
+    <div class="logo-icon">⚡</div>
+    <span class="logo-text">Control Center</span>
+  </a>
+  <div class="cc-nav-links">
+    <a href="../index.html" class="cc-nav-link"><span class="nav-icon">🏠</span> Home</a>
+    <a href="../briefs/latest.html" class="cc-nav-link"><span class="nav-icon">☀️</span> Morning Brief</a>
+    <a href="../projects/index.html" class="cc-nav-link"><span class="nav-icon">🚀</span> Projects</a>
+    <a href="../pipeline/index.html" class="cc-nav-link active"><span class="nav-icon">📈</span> Pipeline</a>
+    <a href="../ai/index.html" class="cc-nav-link"><span class="nav-icon">🤖</span> AI</a>
+    <a href="../links/index.html" class="cc-nav-link"><span class="nav-icon">🔗</span> Quick Links</a>
+  </div>
+</nav>
+
+<div class="cc-page">
+
+  <div class="cc-page-header">
+    <h1>📈 Pipeline Snapshot</h1>
+    <p>Enterprise deals, demo pipeline, and opportunity stages at a glance.</p>
+  </div>
+
+  <!-- Summary bar -->
+  <div class="summary-bar">
+    <div class="summary-card">
+      <div class="summary-label">Total Pipeline</div>
+      <div class="summary-value">—</div>
+      <div class="summary-sub">Connect Salesforce to populate</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Open Deals</div>
+      <div class="summary-value">—</div>
+      <div class="summary-sub">Across all stages</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Avg Deal Size</div>
+      <div class="summary-value">—</div>
+      <div class="summary-sub">Pipeline average</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Demos This Week</div>
+      <div class="summary-value">—</div>
+      <div class="summary-sub">Scheduled &amp; booked</div>
+    </div>
+  </div>
+
+  <!-- Salesforce CTA -->
+  <div class="sf-cta">
+    <div class="sf-cta-text">
+      <strong>☁️ Open Live Pipeline in Salesforce</strong>
+      <span>View real-time opportunity data, filters, and full deal details.</span>
+    </div>
+    <a href="https://foureyes.lightning.force.com/lightning/r/Report/00OVp0000059ehhMAA/view" target="_blank" rel="noopener" class="btn btn-primary">
+      Open in Salesforce →
+    </a>
+  </div>
+
+  <!-- Stage breakdown -->
+  <div class="section-label">Deal Stages</div>
+
+  <div class="pipeline-stages">
+
+    <div class="stage-row">
+      <span class="stage-label">🔍 Prospecting</span>
+      <div class="stage-bar-wrap">
+        <div class="stage-bar" style="width:75%; background: var(--muted);"></div>
+      </div>
+      <span class="stage-count">—</span>
+      <span class="stage-value">—</span>
+    </div>
+
+    <div class="stage-row">
+      <span class="stage-label">🗣 Discovery</span>
+      <div class="stage-bar-wrap">
+        <div class="stage-bar" style="width:55%; background: var(--accent);"></div>
+      </div>
+      <span class="stage-count">—</span>
+      <span class="stage-value">—</span>
+    </div>
+
+    <div class="stage-row">
+      <span class="stage-label">📄 Proposal</span>
+      <div class="stage-bar-wrap">
+        <div class="stage-bar" style="width:35%; background: var(--purple);"></div>
+      </div>
+      <span class="stage-count">—</span>
+      <span class="stage-value">—</span>
+    </div>
+
+    <div class="stage-row">
+      <span class="stage-label">🤝 Negotiation</span>
+      <div class="stage-bar-wrap">
+        <div class="stage-bar" style="width:20%; background: var(--gold);"></div>
+      </div>
+      <span class="stage-count">—</span>
+      <span class="stage-value">—</span>
+    </div>
+
+    <div class="stage-row">
+      <span class="stage-label">🏆 Closed Won</span>
+      <div class="stage-bar-wrap">
+        <div class="stage-bar" style="width:45%; background: var(--green);"></div>
+      </div>
+      <span class="stage-count">—</span>
+      <span class="stage-value">—</span>
+    </div>
+
+  </div>
+
+  <!-- Recent deals placeholder -->
+  <div class="section-label">Recent Opportunities</div>
+
+  <div class="deal-grid">
+    <div class="deal-card">
+      <div class="deal-header">
+        <div>
+          <div class="deal-company">Placeholder — Company A</div>
+          <div class="deal-type">Enterprise · Discovery</div>
+        </div>
+        <span class="chip chip-blue">Discovery</span>
+      </div>
+      <div class="deal-meta">
+        <div class="deal-meta-item">Value: <strong>—</strong></div>
+        <div class="deal-meta-item">Close: <strong>—</strong></div>
+        <div class="deal-meta-item">Owner: <strong>—</strong></div>
+      </div>
+    </div>
+
+    <div class="deal-card">
+      <div class="deal-header">
+        <div>
+          <div class="deal-company">Placeholder — Company B</div>
+          <div class="deal-type">Mid-Market · Proposal</div>
+        </div>
+        <span class="chip chip-purple">Proposal</span>
+      </div>
+      <div class="deal-meta">
+        <div class="deal-meta-item">Value: <strong>—</strong></div>
+        <div class="deal-meta-item">Close: <strong>—</strong></div>
+        <div class="deal-meta-item">Owner: <strong>—</strong></div>
+      </div>
+    </div>
+
+    <div class="deal-card">
+      <div class="deal-header">
+        <div>
+          <div class="deal-company">Placeholder — Company C</div>
+          <div class="deal-type">Enterprise · Negotiation</div>
+        </div>
+        <span class="chip chip-yellow">Negotiation</span>
+      </div>
+      <div class="deal-meta">
+        <div class="deal-meta-item">Value: <strong>—</strong></div>
+        <div class="deal-meta-item">Close: <strong>—</strong></div>
+        <div class="deal-meta-item">Owner: <strong>—</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pipeline-note">
+    ⚠️ This page updates daily via emailed Salesforce report. Placeholder data is shown until the pipeline sync is configured. Contact Jackson to set this up, or open the live report directly in Salesforce above.
+  </div>
+
+</div>
+
+</body>
+</html>

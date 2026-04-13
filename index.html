@@ -3,207 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Morning Brief — Dashboard</title>
+<title>Control Center — Jackson Lambirth</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/shared.css">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #08090d; --sidebar-bg: #0e1016; --surface: #14161f;
-    --border: #1e2133; --border-light: #282d45;
-    --text: #e2e5f1; --muted: #6b7194; --dim: #3e4468;
-    --accent: #4f8ef7; --accent-glow: rgba(79,142,247,.12);
-    --gold: #f5c842; --gold-glow: rgba(245,200,66,.1);
-    --green: #3ecf8e; --red: #f56565;
-    --font: 'DM Sans', system-ui, -apple-system, sans-serif;
-    --mono: 'JetBrains Mono', monospace;
-  }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font);
-    font-size: 14px;
-    line-height: 1.6;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-  }
-
-  /* ─── Sidebar ─── */
-  .sidebar {
-    width: 280px;
-    min-width: 280px;
-    background: var(--sidebar-bg);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-  }
-
-  .sidebar-header {
-    padding: 24px 20px 20px;
+  /* ─── Hero ─── */
+  .hero {
+    padding: 40px 0 32px;
     border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
   }
 
-  .logo-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  .hero-left h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text);
     margin-bottom: 6px;
   }
 
-  .logo-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, var(--accent) 0%, #7c5ef7 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-
-  .logo-text {
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-  }
-
-  .logo-sub {
-    font-size: 12px;
-    color: var(--muted);
-    font-weight: 500;
-    padding-left: 42px;
-  }
-
-  .sidebar-section-label {
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--dim);
-    padding: 20px 20px 10px;
-  }
-
-  .brief-list {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0 12px 20px;
-  }
-
-  .brief-list::-webkit-scrollbar { width: 4px; }
-  .brief-list::-webkit-scrollbar-track { background: transparent; }
-  .brief-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-  .brief-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all .15s ease;
-    border: 1px solid transparent;
-    margin-bottom: 2px;
-  }
-
-  .brief-item:hover {
-    background: var(--surface);
-    border-color: var(--border);
-  }
-
-  .brief-item.active {
-    background: var(--accent-glow);
-    border-color: rgba(79,142,247,.3);
-  }
-
-  .brief-item .date-badge {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .brief-item.active .date-badge {
-    background: rgba(79,142,247,.15);
-    border-color: rgba(79,142,247,.3);
-  }
-
-  .date-badge .month {
-    font-size: 9px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--accent);
-    line-height: 1;
-  }
-
-  .date-badge .day {
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 1.1;
-    color: var(--text);
-  }
-
-  .brief-meta .brief-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-  }
-
-  .brief-meta .brief-day {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 1px;
-  }
-
-  .brief-item.active .brief-label { color: var(--accent); }
-
-  /* ─── No briefs state ─── */
-  .empty-state {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--muted);
-  }
-
-  .empty-state .icon { font-size: 32px; margin-bottom: 12px; opacity: 0.5; }
-  .empty-state .msg { font-size: 13px; line-height: 1.5; }
-
-  /* ─── Main content ─── */
-  .main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .topbar {
-    height: 56px;
-    min-height: 56px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-    background: var(--sidebar-bg);
-  }
-
-  .topbar-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .topbar-date {
+  .hero-left .date-line {
     font-family: var(--mono);
     font-size: 13px;
     font-weight: 600;
@@ -211,18 +36,194 @@
     letter-spacing: 0.3px;
   }
 
-  .topbar-status {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
+  .hero-right { text-align: right; flex-shrink: 0; }
+
+  .live-time {
+    font-family: var(--mono);
+    font-size: 28px;
     font-weight: 600;
-    color: var(--green);
+    color: var(--text);
+    letter-spacing: -0.5px;
+    line-height: 1;
+    margin-bottom: 6px;
   }
 
-  .topbar-status .pulse {
-    width: 7px;
-    height: 7px;
+  .live-time-label {
+    font-size: 12px;
+    color: var(--dim);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ─── Alert chips ─── */
+  .alert-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+  }
+
+  .alert-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 16px;
+    text-decoration: none;
+    transition: border-color .15s, background .15s;
+  }
+
+  .alert-chip:hover {
+    border-color: var(--border-light);
+    background: var(--surface2);
+  }
+
+  .alert-chip .chip-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .alert-chip .chip-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .alert-chip .chip-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--mono);
+    line-height: 1;
+    margin-left: 2px;
+  }
+
+  /* ─── Module grid ─── */
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .module-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 22px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: all .18s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .module-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+    opacity: 0;
+    transition: opacity .18s;
+  }
+
+  .module-card:hover {
+    border-color: var(--border-light);
+    background: var(--surface2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,.35);
+  }
+
+  .module-card:hover::before { opacity: 1; }
+
+  .module-card.blue::before   { background: linear-gradient(90deg, var(--accent), #7c5ef7); }
+  .module-card.green::before  { background: linear-gradient(90deg, var(--green), #2ab87b); }
+  .module-card.gold::before   { background: linear-gradient(90deg, var(--gold), var(--orange)); }
+  .module-card.purple::before { background: linear-gradient(90deg, var(--purple), #6e45d6); }
+  .module-card.teal::before   { background: linear-gradient(90deg, #38bdf8, #818cf8); }
+
+  .module-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .module-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .module-icon.blue   { background: rgba(79,142,247,.15);  }
+  .module-icon.green  { background: rgba(62,207,142,.15);  }
+  .module-icon.gold   { background: rgba(245,200,66,.15);  }
+  .module-icon.purple { background: rgba(155,114,245,.15); }
+  .module-icon.teal   { background: rgba(56,189,248,.15);  }
+
+  .module-arrow {
+    font-size: 18px;
+    color: var(--dim);
+    transition: color .15s, transform .15s;
+  }
+
+  .module-card:hover .module-arrow { color: var(--text); transform: translate(3px,-3px); }
+
+  .module-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.2px;
+  }
+
+  .module-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .module-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+
+  .module-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--dim);
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: var(--border);
+  }
+
+  .module-status {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--green);
+    font-weight: 600;
+    margin-left: auto;
+  }
+
+  .module-status .pulse {
+    width: 6px; height: 6px;
     border-radius: 50%;
     background: var(--green);
     animation: pulse 2s ease-in-out infinite;
@@ -230,304 +231,213 @@
 
   @keyframes pulse {
     0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(62,207,142,.4); }
-    50% { opacity: .7; box-shadow: 0 0 0 5px rgba(62,207,142,0); }
+    50%       { opacity: .7; box-shadow: 0 0 0 5px rgba(62,207,142,0); }
   }
 
-  .topbar-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .btn-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all .15s;
-    font-size: 16px;
-  }
-
-  .btn-icon:hover {
-    border-color: var(--border-light);
-    color: var(--text);
-    background: var(--border);
-  }
-
-  .brief-frame-wrapper {
-    flex: 1;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .brief-frame-wrapper iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: var(--bg);
-  }
-
-  /* ─── Loading state ─── */
-  .loading-overlay {
-    position: absolute;
-    inset: 0;
-    background: var(--bg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    z-index: 10;
-    transition: opacity .3s ease;
-  }
-
-  .loading-overlay.hidden { opacity: 0; pointer-events: none; }
-
-  .loader-ring {
-    width: 36px;
-    height: 36px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin .8s linear infinite;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .loading-text {
-    font-size: 13px;
-    color: var(--muted);
-    font-weight: 500;
-  }
-
-  /* ─── Welcome state ─── */
-  .welcome {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    color: var(--muted);
-    padding: 40px;
+  .cc-footer {
     text-align: center;
+    padding: 24px 0;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--dim);
   }
 
-  .welcome .icon { font-size: 48px; opacity: 0.4; }
-  .welcome h2 { font-size: 20px; font-weight: 600; color: var(--text); }
-  .welcome p { font-size: 14px; max-width: 380px; line-height: 1.6; }
-
-  /* ─── Mobile sidebar toggle ─── */
-  .mobile-toggle {
-    display: none;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: var(--accent);
-    color: white;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    z-index: 100;
-    box-shadow: 0 4px 20px rgba(79,142,247,.4);
-  }
-
-  @media (max-width: 768px) {
-    .sidebar {
-      position: fixed;
-      left: -280px;
-      top: 0;
-      z-index: 50;
-      transition: left .25s ease;
-      box-shadow: 4px 0 24px rgba(0,0,0,.5);
-    }
-    .sidebar.open { left: 0; }
-    .mobile-toggle { display: flex; align-items: center; justify-content: center; }
-    .backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.5);
-      z-index: 49;
-      display: none;
-    }
-    .backdrop.show { display: block; }
+  @media (max-width: 640px) {
+    .hero { padding: 24px 0 20px; }
+    .hero-left h1 { font-size: 24px; }
+    .live-time { font-size: 20px; }
+    .module-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
-<div class="backdrop" id="backdrop" onclick="toggleSidebar()"></div>
-
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <div class="logo-row">
-      <div class="logo-icon">☀️</div>
-      <div class="logo-text">Morning Brief</div>
-    </div>
-    <div class="logo-sub">Powered by Claude + Cowork</div>
+<!-- ─── Nav ─── -->
+<nav class="cc-nav">
+  <a href="index.html" class="cc-nav-logo">
+    <div class="logo-icon">⚡</div>
+    <span class="logo-text">Control Center</span>
+  </a>
+  <div class="cc-nav-links">
+    <a href="index.html" class="cc-nav-link active"><span class="nav-icon">🏠</span> Home</a>
+    <a href="briefs/latest.html" class="cc-nav-link"><span class="nav-icon">☀️</span> Morning Brief</a>
+    <a href="projects/index.html" class="cc-nav-link"><span class="nav-icon">🚀</span> Projects</a>
+    <a href="pipeline/index.html" class="cc-nav-link"><span class="nav-icon">📈</span> Pipeline</a>
+    <a href="ai/index.html" class="cc-nav-link"><span class="nav-icon">🤖</span> AI</a>
+    <a href="links/index.html" class="cc-nav-link"><span class="nav-icon">🔗</span> Quick Links</a>
   </div>
-  <div class="sidebar-section-label">Briefings</div>
-  <div class="brief-list" id="briefList">
-    <div class="empty-state">
-      <div class="icon">📭</div>
-      <div class="msg">Loading briefings…</div>
+</nav>
+
+<!-- ─── Page ─── -->
+<div class="cc-page">
+
+  <div class="hero">
+    <div class="hero-left">
+      <h1>Welcome back, Jackson 👋</h1>
+      <div class="date-line" id="heroDate">Loading…</div>
+    </div>
+    <div class="hero-right">
+      <div class="live-time" id="liveTime">--:--</div>
+      <div class="live-time-label">Mountain Time</div>
     </div>
   </div>
-</aside>
 
-<main class="main">
-  <div class="topbar">
-    <div class="topbar-left">
-      <span class="topbar-date" id="topbarDate">—</span>
+  <!-- Alert chips — reads stats from latest briefing -->
+  <div class="alert-bar">
+    <a class="alert-chip" href="briefs/latest.html">
+      <div class="chip-dot" style="background: var(--purple)"></div>
+      <span class="chip-label">Meetings Today</span>
+      <span class="chip-val" id="valMeetings">—</span>
+    </a>
+    <a class="alert-chip" href="briefs/latest.html">
+      <div class="chip-dot" style="background: var(--gold)"></div>
+      <span class="chip-label">Unread Emails</span>
+      <span class="chip-val" id="valEmails">—</span>
+    </a>
+    <a class="alert-chip" href="briefs/latest.html">
+      <div class="chip-dot" style="background: var(--accent)"></div>
+      <span class="chip-label">Slack Threads</span>
+      <span class="chip-val" id="valSlack">—</span>
+    </a>
+    <a class="alert-chip" href="briefs/latest.html">
+      <div class="chip-dot" style="background: var(--orange)"></div>
+      <span class="chip-label">Action Items</span>
+      <span class="chip-val" id="valActions">—</span>
+    </a>
+    <div class="alert-chip" style="cursor:default;">
+      <div class="chip-dot" style="background: var(--green)"></div>
+      <span class="chip-label">Last Brief</span>
+      <span class="chip-val" id="valBriefDate" style="font-size:13px; font-family: var(--font);">—</span>
     </div>
-    <div class="topbar-actions">
-      <div class="topbar-status" id="topbarStatus" style="display:none;">
-        <span class="pulse"></span>
-        <span>Latest</span>
+  </div>
+
+  <div class="section-label">Modules</div>
+
+  <div class="module-grid">
+
+    <a class="module-card blue" href="briefs/latest.html">
+      <div class="module-card-top">
+        <div class="module-icon blue">☀️</div>
+        <span class="module-arrow">↗</span>
       </div>
-      <button class="btn-icon" title="Open briefing in new tab" onclick="openInTab()">↗</button>
-      <button class="btn-icon" title="Refresh" onclick="loadManifest()">⟳</button>
-    </div>
+      <div>
+        <div class="module-name">Morning Briefing</div>
+        <div class="module-desc">Today's schedule, emails, Slack threads, and prioritized action items — generated fresh each morning by Claude.</div>
+      </div>
+      <div class="module-footer">
+        <span class="module-tag">Daily</span>
+        <span class="module-tag">Auto-updated</span>
+        <span class="module-status"><span class="pulse"></span> Live</span>
+      </div>
+    </a>
+
+    <a class="module-card green" href="projects/index.html">
+      <div class="module-card-top">
+        <div class="module-icon green">🚀</div>
+        <span class="module-arrow">↗</span>
+      </div>
+      <div>
+        <div class="module-name">Active Projects</div>
+        <div class="module-desc">Connect for Partners, Force, Strong Auto, Enterprise pipeline status — track key contacts and sprint progress.</div>
+      </div>
+      <div class="module-footer">
+        <span class="module-tag">Force</span>
+        <span class="module-tag">Strong Auto</span>
+        <span class="module-tag">L2T</span>
+      </div>
+    </a>
+
+    <a class="module-card gold" href="pipeline/index.html">
+      <div class="module-card-top">
+        <div class="module-icon gold">📈</div>
+        <span class="module-arrow">↗</span>
+      </div>
+      <div>
+        <div class="module-name">Pipeline Snapshot</div>
+        <div class="module-desc">Enterprise deals, demo pipeline, and opportunity stages at a glance. Updated daily from Salesforce.</div>
+      </div>
+      <div class="module-footer">
+        <span class="module-tag">Salesforce</span>
+        <span class="module-tag">Daily</span>
+      </div>
+    </a>
+
+    <a class="module-card purple" href="ai/index.html">
+      <div class="module-card-top">
+        <div class="module-icon purple">🤖</div>
+        <span class="module-arrow">↗</span>
+      </div>
+      <div>
+        <div class="module-name">AI Projects</div>
+        <div class="module-desc">Scheduled tasks, Cowork automations, and things I'm building with Claude — with run history and status.</div>
+      </div>
+      <div class="module-footer">
+        <span class="module-tag">Cowork</span>
+        <span class="module-tag">Scheduled</span>
+        <span class="module-status"><span class="pulse"></span> Running</span>
+      </div>
+    </a>
+
+    <a class="module-card teal" href="links/index.html">
+      <div class="module-card-top">
+        <div class="module-icon teal">🔗</div>
+        <span class="module-arrow">↗</span>
+      </div>
+      <div>
+        <div class="module-name">Quick Links</div>
+        <div class="module-desc">Shortcuts to Salesforce, Slack, Datadog, Google Drive, Zoom, and other tools — one click away.</div>
+      </div>
+      <div class="module-footer">
+        <span class="module-tag">Salesforce</span>
+        <span class="module-tag">Slack</span>
+        <span class="module-tag">Drive</span>
+      </div>
+    </a>
+
   </div>
 
-  <div class="brief-frame-wrapper" id="frameWrapper">
-    <div class="welcome" id="welcomeState">
-      <div class="icon">☀️</div>
-      <h2>Morning Brief Dashboard</h2>
-      <p>Your daily briefings from Claude appear here automatically. Select a date from the sidebar or wait for the next scheduled run.</p>
-    </div>
-    <div class="loading-overlay hidden" id="loader">
-      <div class="loader-ring"></div>
-      <div class="loading-text">Loading briefing…</div>
-    </div>
-    <iframe id="briefFrame" style="display:none;" sandbox="allow-same-origin"></iframe>
+  <div class="cc-footer">
+    Control Center &nbsp;·&nbsp; Powered by Claude + Cowork &nbsp;·&nbsp; <span id="footerDate"></span>
   </div>
-</main>
 
-<button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+</div>
 
 <script>
-  const MANIFEST_URL = 'manifest.json';
-  let briefings = [];
-  let currentIndex = -1;
+  function updateClock() {
+    const now = new Date();
+    const mt = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Denver',
+      hour: 'numeric', minute: '2-digit', hour12: true
+    }).format(now);
+    document.getElementById('liveTime').textContent = mt;
 
-  const briefList = document.getElementById('briefList');
-  const briefFrame = document.getElementById('briefFrame');
-  const welcomeState = document.getElementById('welcomeState');
-  const loader = document.getElementById('loader');
-  const topbarDate = document.getElementById('topbarDate');
-  const topbarStatus = document.getElementById('topbarStatus');
-
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
-    document.getElementById('backdrop').classList.toggle('show');
+    const dateStr = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Denver',
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    }).format(now);
+    document.getElementById('heroDate').textContent = dateStr;
+    document.getElementById('footerDate').textContent = dateStr;
   }
+  updateClock();
+  setInterval(updateClock, 30000);
 
-  function formatDateShort(dateStr) {
-    const d = new Date(dateStr + 'T12:00:00');
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  }
-
-  function getDayName(dateStr) {
-    const d = new Date(dateStr + 'T12:00:00');
-    return d.toLocaleDateString('en-US', { weekday: 'long' });
-  }
-
-  function getMonth(dateStr) {
-    const d = new Date(dateStr + 'T12:00:00');
-    return d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
-  }
-
-  function getDay(dateStr) {
-    const d = new Date(dateStr + 'T12:00:00');
-    return d.getDate();
-  }
-
-  function renderList() {
-    if (briefings.length === 0) {
-      briefList.innerHTML = `
-        <div class="empty-state">
-          <div class="icon">📭</div>
-          <div class="msg">No briefings yet.<br>They'll appear here after your first scheduled run.</div>
-        </div>`;
-      return;
-    }
-
-    briefList.innerHTML = briefings.map((b, i) => `
-      <div class="brief-item ${i === currentIndex ? 'active' : ''}" onclick="loadBrief(${i})">
-        <div class="date-badge">
-          <span class="month">${getMonth(b.date)}</span>
-          <span class="day">${getDay(b.date)}</span>
-        </div>
-        <div class="brief-meta">
-          <div class="brief-label">${b.label || b.date}</div>
-          <div class="brief-day">${getDayName(b.date)}</div>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function loadBrief(index) {
-    currentIndex = index;
-    const brief = briefings[index];
-
-    welcomeState.style.display = 'none';
-    briefFrame.style.display = 'block';
-    loader.classList.remove('hidden');
-
-    briefFrame.onload = () => {
-      loader.classList.add('hidden');
-    };
-    briefFrame.src = brief.file;
-
-    topbarDate.textContent = brief.label || brief.date;
-    topbarStatus.style.display = index === 0 ? 'flex' : 'none';
-
-    renderList();
-
-    // Close mobile sidebar
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('backdrop').classList.remove('show');
-  }
-
-  function openInTab() {
-    if (currentIndex >= 0) {
-      window.open(briefings[currentIndex].file, '_blank');
-    }
-  }
-
-  async function loadManifest() {
+  async function loadStats() {
     try {
-      const resp = await fetch(MANIFEST_URL + '?t=' + Date.now());
+      const resp = await fetch('manifest.json?t=' + Date.now());
       const data = await resp.json();
-      briefings = (data.briefings || []).sort((a, b) => b.date.localeCompare(a.date));
-      renderList();
-      if (briefings.length > 0 && currentIndex === -1) {
-        loadBrief(0);
-      }
-    } catch (e) {
-      console.error('Failed to load manifest:', e);
-      briefList.innerHTML = `
-        <div class="empty-state">
-          <div class="icon">⚠️</div>
-          <div class="msg">Couldn't load manifest.json.<br>Make sure it's in the same directory as this page.</div>
-        </div>`;
-    }
-  }
+      const briefs = (data.briefings || []).sort((a,b) => b.date.localeCompare(a.date));
+      if (briefs.length === 0) return;
 
-  // Auto-refresh manifest every 5 minutes to pick up new briefings
-  setInterval(loadManifest, 5 * 60 * 1000);
+      const latest = briefs[0];
+      document.getElementById('valBriefDate').textContent = latest.label || latest.date;
 
-  loadManifest();
-</script>
-</body>
-</html>
+      try {
+        const bResp = await fetch(latest.file + '?t=' + Date.now());
+        const html = await bResp.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        doc.querySelectorAll('.stat-chip').forEach(chip => {
+          const spans = chip.querySelectorAll('span');
+          let label = '', val = '';
+          spans.forEach(s => {
+            if (s.classList.contains('val')) val = s.textContent.trim();
+            else if (!s.classList.contains('dot')) label

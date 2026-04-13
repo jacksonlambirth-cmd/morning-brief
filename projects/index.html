@@ -257,30 +257,4 @@
       </div>
       <div class="project-footer">
         <span class="updated-at" id="l2t-updated">—</span>
-        <a href="https://foureyes.lightning.force.com" target="_blank" rel="noopener" class="btn btn-ghost" style="font-size:12px; padding: 5px 12px;">Salesforce ↗</a>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="note-box">
-    💡 This page is refreshed weekly via a Cowork scheduled task that reads Slack and updates project statuses automatically. You can also trigger a manual refresh from the <a href="../ai/index.html" style="color: var(--accent);">AI Projects</a> page.
-  </div>
-
-</div>
-
-<script>
-  // Stamp "last updated" with today's date on load
-  const today = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'America/Denver',
-    month: 'short', day: 'numeric', year: 'numeric'
-  }).format(new Date());
-
-  ['force-updated','strong-updated','l2t-updated'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = 'Updated ' + today;
-  });
-</script>
-
-</body>
-</html>
+        <a href="https://foureyes.lightning.force.com" target="_blank" rel="noopener" class="btn btn-ghost" style="font-size:12px; paddin

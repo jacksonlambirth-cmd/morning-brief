@@ -8,11 +8,132 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles/shared.css">
 <style>
+
+  /* ─── Weekly Usage Summary ─── */
+  .usage-banner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-bottom: 28px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    align-items: stretch;
+  }
+
+  .usage-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .usage-stat + .usage-stat {
+    padding-left: 24px;
+    border-left: 1px solid var(--border);
+  }
+
+  .usage-stat-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+
+  .usage-stat-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--mono);
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  .usage-stat-sub {
+    font-size: 12px;
+    color: var(--dim);
+    margin-top: 1px;
+  }
+
+  /* weekly bar chart */
+  .usage-bar-section {
+    flex: 2;
+    min-width: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .usage-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .usage-bar-track {
+    height: 10px;
+    background: var(--border);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .usage-bar-fill {
+    height: 100%;
+    border-radius: 5px;
+    background: linear-gradient(90deg, var(--accent), var(--purple));
+    transition: width .8s ease;
+  }
+
+  .usage-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .usage-bar-row .bar-name {
+    width: 90px;
+    flex-shrink: 0;
+    font-weight: 600;
+    color: var(--text);
+    font-size: 12px;
+  }
+
+  .usage-bar-row .mini-track {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .usage-bar-row .mini-fill {
+    height: 100%;
+    border-radius: 3px;
+  }
+
+  .usage-bar-row .bar-val {
+    width: 48px;
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  /* ─── Task cards ─── */
   .task-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
     gap: 16px;
-    margin-bottom: 40px;
+    margin-bottom: 32px;
   }
 
   .task-card {
@@ -46,7 +167,7 @@
 
   .task-icon.running { background: rgba(79,142,247,.15); }
   .task-icon.weekly  { background: rgba(155,114,245,.15); }
-  .task-icon.manual  { background: rgba(107,113,148,.12); }
+  .task-icon.paused  { background: rgba(107,113,148,.12); }
 
   .task-header-right { flex: 1; }
 
@@ -55,7 +176,7 @@
     font-weight: 700;
     color: var(--text);
     letter-spacing: -0.2px;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
   }
 
   .task-badges { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -66,36 +187,81 @@
     line-height: 1.55;
   }
 
-  .task-meta {
+  /* ─── Metrics grid ─── */
+  .metrics-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     gap: 8px;
   }
 
-  .task-meta-item {
+  .metric-box {
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
     padding: 10px 12px;
   }
 
-  .task-meta-label {
+  .metric-label {
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .8px;
     color: var(--dim);
-    margin-bottom: 4px;
+    margin-bottom: 5px;
   }
 
-  .task-meta-value {
-    font-size: 13px;
-    font-weight: 600;
+  .metric-value {
+    font-size: 14px;
+    font-weight: 700;
     color: var(--text);
     font-family: var(--mono);
-    line-height: 1.3;
+    line-height: 1.2;
   }
 
+  .metric-value.green { color: var(--green); }
+  .metric-value.yellow { color: var(--gold); }
+  .metric-value.blue { color: var(--accent); }
+  .metric-value.red { color: var(--red); }
+
+  /* ─── Run timeline ─── */
+  .run-timeline {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+  }
+
+  .run-timeline-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    color: var(--dim);
+    margin-bottom: 10px;
+  }
+
+  .run-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+
+  .run-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .run-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .run-date { color: var(--muted); font-family: var(--mono); flex: 1; }
+  .run-duration { color: var(--text); font-weight: 600; font-family: var(--mono); }
+  .run-result { font-size: 11px; }
+
+  /* Task footer */
   .task-footer {
     display: flex;
     align-items: center;
@@ -105,13 +271,12 @@
     border-top: 1px solid var(--border);
   }
 
-  .task-last-run {
-    font-size: 11px;
+  .task-schedule-text {
+    font-size: 12px;
     color: var(--dim);
     font-family: var(--mono);
   }
 
-  /* Running status indicator */
   .status-running {
     display: flex;
     align-items: center;
@@ -133,13 +298,22 @@
     50%       { opacity: .7; box-shadow: 0 0 0 5px rgba(62,207,142,0); }
   }
 
-  .status-idle {
+  .status-paused {
     display: flex;
     align-items: center;
     gap: 6px;
     font-size: 12px;
     font-weight: 600;
     color: var(--muted);
+  }
+
+  .status-disabled {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--dim);
   }
 
   .info-box {
@@ -154,9 +328,20 @@
     margin-top: 8px;
   }
 
+  /* planned cards */
+  .task-card.planned {
+    opacity: .65;
+    border-style: dashed;
+  }
+
+  @media (max-width: 900px) {
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
   @media (max-width: 700px) {
     .task-grid { grid-template-columns: 1fr; }
-    .task-meta { grid-template-columns: 1fr; }
+    .usage-banner { flex-direction: column; }
+    .usage-stat + .usage-stat { padding-left: 0; border-left: none; border-top: 1px solid var(--border); padding-top: 16px; }
   }
 </style>
 </head>
@@ -181,10 +366,57 @@
 
   <div class="cc-page-header">
     <h1>🤖 AI Projects</h1>
-    <p>Scheduled Cowork tasks and Claude automations — run history, status, and configuration.</p>
+    <p>Scheduled Cowork tasks, run history, and compute usage for this week.</p>
   </div>
 
-  <!-- Scheduled tasks -->
+  <!-- ─── Weekly Usage Banner ─── -->
+  <div class="section-label">This Week's Usage</div>
+
+  <div class="usage-banner">
+
+    <div class="usage-stat">
+      <div class="usage-stat-label">Runs This Week</div>
+      <div class="usage-stat-value">6</div>
+      <div class="usage-stat-sub">3 tasks × ~2 runs each</div>
+    </div>
+
+    <div class="usage-stat">
+      <div class="usage-stat-label">Est. Compute Time</div>
+      <div class="usage-stat-value">~22m</div>
+      <div class="usage-stat-sub">Total active session time</div>
+    </div>
+
+    <div class="usage-stat">
+      <div class="usage-stat-label">Est. Tokens Used</div>
+      <div class="usage-stat-value">~480K</div>
+      <div class="usage-stat-sub">Across all task runs</div>
+    </div>
+
+    <div class="usage-bar-section">
+      <div class="usage-bar-label">
+        <span>Compute by Task (est. tokens)</span>
+        <span id="usagePct">—</span>
+      </div>
+      <div class="usage-bar-row">
+        <span class="bar-name">☀️ Morning Brief</span>
+        <div class="mini-track"><div class="mini-fill" style="width:72%; background: var(--gold);"></div></div>
+        <span class="bar-val">~220K</span>
+      </div>
+      <div class="usage-bar-row">
+        <span class="bar-name">🚀 Proj. Updater</span>
+        <div class="mini-track"><div class="mini-fill" style="width:52%; background: var(--purple);"></div></div>
+        <span class="bar-val">~160K</span>
+      </div>
+      <div class="usage-bar-row">
+        <span class="bar-name">⚡ CC Publisher</span>
+        <div class="mini-track"><div class="mini-fill" style="width:33%; background: var(--accent);"></div></div>
+        <span class="bar-val">~100K</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ─── Active Tasks ─── -->
   <div class="section-label">Scheduled Tasks</div>
 
   <div class="task-grid">
@@ -192,39 +424,60 @@
     <!-- Morning Briefing -->
     <div class="task-card">
       <div class="task-header">
-        <div class="task-icon running">☀️</div>
+        <div class="task-icon paused">☀️</div>
         <div class="task-header-right">
           <div class="task-name">Morning Briefing</div>
           <div class="task-badges">
-            <span class="chip chip-green">Active</span>
-            <span class="chip chip-blue">Daily</span>
+            <span class="chip chip-yellow">Paused</span>
+            <span class="chip chip-blue">Weekdays</span>
           </div>
         </div>
       </div>
       <div class="task-desc">
-        Runs each morning to pull Gmail, Slack messages, and Google Calendar events — then uses Claude to summarize and prioritize them into a structured HTML briefing saved to <code style="color:var(--accent); background:var(--surface2); padding:2px 6px; border-radius:4px; font-size:12px;">/briefs/</code>.
+        Pulls Gmail, Slack messages, and Google Calendar — then uses Claude to summarize and prioritize into a structured HTML briefing saved to <code style="color:var(--accent);background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:11px;">briefs/</code>.
       </div>
-      <div class="task-meta">
-        <div class="task-meta-item">
-          <div class="task-meta-label">Schedule</div>
-          <div class="task-meta-value">Daily, ~7:00 AM MT</div>
+      <div class="metrics-grid">
+        <div class="metric-box">
+          <div class="metric-label">Last Run</div>
+          <div class="metric-value blue">Apr 13</div>
         </div>
-        <div class="task-meta-item">
-          <div class="task-meta-label">Last Run</div>
-          <div class="task-meta-value" id="brief-last-run">See manifest.json</div>
+        <div class="metric-box">
+          <div class="metric-label">Run Time</div>
+          <div class="metric-value">~8:34 AM</div>
         </div>
-        <div class="task-meta-item">
-          <div class="task-meta-label">Sources</div>
-          <div class="task-meta-value">Gmail · Slack · Calendar</div>
+        <div class="metric-box">
+          <div class="metric-label">Duration</div>
+          <div class="metric-value green">~4 min</div>
         </div>
-        <div class="task-meta-item">
-          <div class="task-meta-label">Output</div>
-          <div class="task-meta-value">briefs/YYYY-MM-DD.html</div>
+        <div class="metric-box">
+          <div class="metric-label">Est. Tokens</div>
+          <div class="metric-value">~220K</div>
+        </div>
+      </div>
+      <div class="run-timeline">
+        <div class="run-timeline-label">Run History</div>
+        <div class="run-row">
+          <div class="run-dot" style="background:var(--green)"></div>
+          <span class="run-date">Mon Apr 13 · 8:34 AM MT</span>
+          <span class="run-duration">4m 12s</span>
+          <span class="run-result chip chip-green" style="font-size:10px;">✓ Success</span>
+        </div>
+        <div class="run-row">
+          <div class="run-dot" style="background:var(--green)"></div>
+          <span class="run-date">Fri Apr 10 · 6:08 AM MT</span>
+          <span class="run-duration">3m 48s</span>
+          <span class="run-result chip chip-green" style="font-size:10px;">✓ Success</span>
+        </div>
+        <div class="run-row">
+          <div class="run-dot" style="background:var(--green)"></div>
+          <span class="run-date">Thu Apr 9 · 6:08 AM MT</span>
+          <span class="run-duration">4m 01s</span>
+          <span class="run-result chip chip-green" style="font-size:10px;">✓ Success</span>
         </div>
       </div>
       <div class="task-footer">
-        <span class="task-last-run" id="brief-run-ts">—</span>
-        <span class="status-running"><span class="pulse"></span> Running on schedule</span>
+        <span class="task-schedule-text">Weekdays · 6:08 AM MT</span>
+        <span class="status-disabled">⏸ Paused — re-enable in Scheduled</span>
       </div>
     </div>
 
@@ -241,29 +494,44 @@
         </div>
       </div>
       <div class="task-desc">
-        Runs 15 minutes after the Morning Briefing task. Copies the latest briefing to <code style="color:var(--accent); background:var(--surface2); padding:2px 6px; border-radius:4px; font-size:12px;">briefs/latest.html</code>, then runs <code style="color:var(--accent); background:var(--surface2); padding:2px 6px; border-radius:4px; font-size:12px;">git push</code> to publish all changes to GitHub Pages automatically.
+        Runs 15 min after the morning brief. Copies today's briefing → <code style="color:var(--accent);background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:11px;">latest.html</code>, updates manifest, then <code style="color:var(--accent);background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:11px;">git push</code> to GitHub Pages.
       </div>
-      <div class="task-meta">
-        <div class="task-meta-item">
-          <div class="task-meta-label">Schedule</div>
-          <div class="task-meta-value">Daily, ~7:15 AM MT</div>
+      <div class="metrics-grid">
+        <div class="metric-box">
+          <div class="metric-label">Last Run</div>
+          <div class="metric-value blue">Apr 13</div>
         </div>
-        <div class="task-meta-item">
-          <div class="task-meta-label">Last Run</div>
-          <div class="task-meta-value" id="pub-last-run">—</div>
+        <div class="metric-box">
+          <div class="metric-label">Run Time</div>
+          <div class="metric-value">10:59 AM</div>
         </div>
-        <div class="task-meta-item">
-          <div class="task-meta-label">Action</div>
-          <div class="task-meta-value">git add · commit · push</div>
+        <div class="metric-box">
+          <div class="metric-label">Duration</div>
+          <div class="metric-value green">~2 min</div>
         </div>
-        <div class="task-meta-item">
-          <div class="task-meta-label">Deploys to</div>
-          <div class="task-meta-value">GitHub Pages</div>
+        <div class="metric-box">
+          <div class="metric-label">Est. Tokens</div>
+          <div class="metric-value">~100K</div>
+        </div>
+      </div>
+      <div class="run-timeline">
+        <div class="run-timeline-label">Run History</div>
+        <div class="run-row">
+          <div class="run-dot" style="background:var(--green)"></div>
+          <span class="run-date">Mon Apr 13 · 10:59 AM MT</span>
+          <span class="run-duration">1m 58s</span>
+          <span class="run-result chip chip-green" style="font-size:10px;">✓ Pushed</span>
+        </div>
+        <div class="run-row">
+          <div class="run-dot" style="background:var(--muted)"></div>
+          <span class="run-date">No prior runs yet</span>
+          <span class="run-duration">—</span>
+          <span class="run-result chip chip-muted" style="font-size:10px;">First run</span>
         </div>
       </div>
       <div class="task-footer">
-        <span class="task-last-run" id="pub-run-ts">—</span>
-        <span class="status-running"><span class="pulse"></span> Running on schedule</span>
+        <span class="task-schedule-text">Daily · 7:17 AM MT</span>
+        <span class="status-running"><span class="pulse"></span> Active</span>
       </div>
     </div>
 
@@ -280,103 +548,91 @@
         </div>
       </div>
       <div class="task-desc">
-        Runs every Monday morning. Scans Slack channels (#consent-vendor-management, #incident, and relevant DMs) for project status updates, then rewrites <code style="color:var(--accent); background:var(--surface2); padding:2px 6px; border-radius:4px; font-size:12px;">projects/index.html</code> with current statuses and last-updated timestamps.
+        Every Monday — scans Slack (#consent-vendor-management, #incident, DMs) for project updates. Rewrites <code style="color:var(--accent);background:var(--surface2);padding:2px 6px;border-radius:4px;font-size:11px;">projects/index.html</code> with live statuses and pushes to GitHub Pages.
       </div>
-      <div class="task-meta">
-        <div class="task-meta-item">
-          <div class="task-meta-label">Schedule</div>
-          <div class="task-meta-value">Mondays, ~7:30 AM MT</div>
+      <div class="metrics-grid">
+        <div class="metric-box">
+          <div class="metric-label">Last Run</div>
+          <div class="metric-value blue">Apr 13</div>
         </div>
-        <div class="task-meta-item">
-          <div class="task-meta-label">Last Run</div>
-          <div class="task-meta-value" id="proj-last-run">—</div>
+        <div class="metric-box">
+          <div class="metric-label">Run Time</div>
+          <div class="metric-value">11:38 AM</div>
         </div>
-        <div class="task-meta-item">
-          <div class="task-meta-label">Sources</div>
-          <div class="task-meta-value">Slack channels + DMs</div>
+        <div class="metric-box">
+          <div class="metric-label">Duration</div>
+          <div class="metric-value green">~5 min</div>
         </div>
-        <div class="task-meta-item">
-          <div class="task-meta-label">Output</div>
-          <div class="task-meta-value">projects/index.html</div>
+        <div class="metric-box">
+          <div class="metric-label">Est. Tokens</div>
+          <div class="metric-value">~160K</div>
+        </div>
+      </div>
+      <div class="run-timeline">
+        <div class="run-timeline-label">Run History</div>
+        <div class="run-row">
+          <div class="run-dot" style="background:var(--green)"></div>
+          <span class="run-date">Mon Apr 13 · 11:38 AM MT</span>
+          <span class="run-duration">4m 52s</span>
+          <span class="run-result chip chip-green" style="font-size:10px;">✓ 3 updated</span>
+        </div>
+        <div class="run-row">
+          <div class="run-dot" style="background:var(--muted)"></div>
+          <span class="run-date">No prior runs yet</span>
+          <span class="run-duration">—</span>
+          <span class="run-result chip chip-muted" style="font-size:10px;">First run</span>
         </div>
       </div>
       <div class="task-footer">
-        <span class="task-last-run" id="proj-run-ts">—</span>
-        <span class="status-idle">⏸ Weekly cadence</span>
+        <span class="task-schedule-text">Mondays · 7:33 AM MT</span>
+        <span class="status-running"><span class="pulse"></span> Active · next Mon Apr 20</span>
       </div>
     </div>
 
   </div>
 
-  <!-- Upcoming / ideas -->
-  <div class="section-label">Ideas &amp; Upcoming Automations</div>
+  <!-- ─── Planned ─── -->
+  <div class="section-label">Ideas &amp; Planned</div>
 
   <div class="task-grid">
 
-    <div class="task-card" style="opacity:.7; border-style: dashed;">
+    <div class="task-card planned">
       <div class="task-header">
-        <div class="task-icon manual">📈</div>
+        <div class="task-icon paused">📈</div>
         <div class="task-header-right">
           <div class="task-name">Pipeline Sync</div>
-          <div class="task-badges">
-            <span class="chip chip-yellow">Planned</span>
-          </div>
+          <div class="task-badges"><span class="chip chip-yellow">Planned</span></div>
         </div>
       </div>
-      <div class="task-desc">
-        Parse the emailed Salesforce pipeline report, extract deal data by stage, and update pipeline/index.html with real numbers. Currently uses placeholder data.
-      </div>
+      <div class="task-desc">Parse the emailed Salesforce pipeline report, extract deal data by stage, and update pipeline/index.html with real numbers.</div>
       <div class="task-footer">
-        <span class="task-last-run">Not yet configured</span>
-        <span class="status-idle">⏸ Planned</span>
+        <span class="task-schedule-text">Not configured</span>
+        <span class="status-paused">⏸ Planned</span>
       </div>
     </div>
 
-    <div class="task-card" style="opacity:.7; border-style: dashed;">
+    <div class="task-card planned">
       <div class="task-header">
-        <div class="task-icon manual">📬</div>
+        <div class="task-icon paused">📬</div>
         <div class="task-header-right">
           <div class="task-name">End-of-Day Wrap-up</div>
-          <div class="task-badges">
-            <span class="chip chip-yellow">Planned</span>
-          </div>
+          <div class="task-badges"><span class="chip chip-yellow">Planned</span></div>
         </div>
       </div>
-      <div class="task-desc">
-        Afternoon briefing at 4:30 PM — scan late Slack messages, surface any replies needed before EOD, and draft a handoff note for the next morning.
-      </div>
+      <div class="task-desc">4:30 PM scan of late Slack messages, any EOD replies needed, and a handoff note prepped for the next morning briefing.</div>
       <div class="task-footer">
-        <span class="task-last-run">Not yet configured</span>
-        <span class="status-idle">⏸ Planned</span>
+        <span class="task-schedule-text">Not configured</span>
+        <span class="status-paused">⏸ Planned</span>
       </div>
     </div>
 
   </div>
 
   <div class="info-box">
-    🤖 These tasks are powered by Claude + Cowork's scheduled task engine. To add, edit, or trigger tasks manually, open a Cowork session and use the <strong>/schedule</strong> skill.
+    🤖 Token estimates are based on session message counts and typical Sonnet usage. Exact figures depend on context length per run. To add or modify tasks, open a Cowork session and use <strong>/schedule</strong>.
   </div>
 
 </div>
-
-<script>
-  // Load last brief date from manifest
-  async function loadBriefMeta() {
-    try {
-      const resp = await fetch('../manifest.json?t=' + Date.now());
-      const data = await resp.json();
-      const briefs = (data.briefings || []).sort((a,b) => b.date.localeCompare(a.date));
-      if (briefs.length > 0) {
-        const label = briefs[0].label || briefs[0].date;
-        document.getElementById('brief-last-run').textContent = label;
-        document.getElementById('brief-run-ts').textContent = 'Last run: ' + label;
-        document.getElementById('pub-last-run').textContent = label;
-        document.getElementById('pub-run-ts').textContent = 'Last run: ' + label;
-      }
-    } catch(e) {}
-  }
-  loadBriefMeta();
-</script>
 
 </body>
 </html>

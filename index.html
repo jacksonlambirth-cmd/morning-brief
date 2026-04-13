@@ -8,27 +8,62 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles/shared.css">
 <style>
+
   /* ─── Hero ─── */
   .hero {
-    padding: 40px 0 32px;
+    padding: 36px 0 28px;
     border-bottom: 1px solid var(--border);
-    margin-bottom: 32px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
+    margin-bottom: 24px;
   }
 
-  .hero-left h1 {
-    font-size: 32px;
+  .hero-profile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  /* Profile photo */
+  .profile-photo {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 2px solid var(--border-light);
+    box-shadow: 0 0 0 4px var(--accent-glow);
+    background: linear-gradient(135deg, #4f8ef7 0%, #7c5ef7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .profile-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+  }
+
+  .profile-initials {
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.5px;
+    font-family: var(--font);
+    /* Hidden when img loads */
+  }
+
+  .hero-text h1 {
+    font-size: 30px;
     font-weight: 700;
     letter-spacing: -0.5px;
     color: var(--text);
-    margin-bottom: 6px;
+    margin-bottom: 5px;
   }
 
-  .hero-left .date-line {
+  .hero-text .date-line {
     font-family: var(--mono);
     font-size: 13px;
     font-weight: 600;
@@ -36,24 +71,134 @@
     letter-spacing: 0.3px;
   }
 
-  .hero-right { text-align: right; flex-shrink: 0; }
-
-  .live-time {
-    font-family: var(--mono);
-    font-size: 28px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.5px;
-    line-height: 1;
-    margin-bottom: 6px;
+  /* ─── Quote card ─── */
+  .quote-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    min-height: 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
   }
 
-  .live-time-label {
-    font-size: 12px;
-    color: var(--dim);
-    font-weight: 500;
+  .quote-card::before {
+    content: '\201C';
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    font-size: 100px;
+    color: var(--accent);
+    opacity: 0.07;
+    font-family: Georgia, serif;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .quote-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.2px;
+    color: var(--dim);
+    margin-bottom: 2px;
+  }
+
+  .quote-body {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .quote-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.55;
+    font-style: italic;
+    flex: 1;
+    min-width: 200px;
+    transition: opacity .4s ease;
+  }
+
+  .quote-text.fading { opacity: 0; }
+
+  .quote-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .quote-author {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    font-style: normal;
+    white-space: nowrap;
+  }
+
+  .quote-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .quote-btn {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    transition: all .15s;
+    font-family: var(--font);
+  }
+
+  .quote-btn:hover { color: var(--text); border-color: var(--border-light); }
+
+  .quote-dots {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .quote-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: background .2s;
+    cursor: pointer;
+  }
+
+  .quote-dot.active { background: var(--accent); }
+
+  /* ai-generated badge */
+  .ai-badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    color: var(--purple);
+    background: rgba(155,114,245,.1);
+    border: 1px solid rgba(155,114,245,.2);
+    padding: 2px 7px;
+    border-radius: 6px;
   }
 
   /* ─── Alert chips ─── */
@@ -61,7 +206,7 @@
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
-    margin-bottom: 36px;
+    margin-bottom: 32px;
   }
 
   .alert-chip {
@@ -82,8 +227,7 @@
   }
 
   .alert-chip .chip-dot {
-    width: 10px;
-    height: 10px;
+    width: 10px; height: 10px;
     border-radius: 50%;
     flex-shrink: 0;
   }
@@ -143,7 +287,6 @@
   }
 
   .module-card:hover::before { opacity: 1; }
-
   .module-card.blue::before   { background: linear-gradient(90deg, var(--accent), #7c5ef7); }
   .module-card.green::before  { background: linear-gradient(90deg, var(--green), #2ab87b); }
   .module-card.gold::before   { background: linear-gradient(90deg, var(--gold), var(--orange)); }
@@ -157,8 +300,7 @@
   }
 
   .module-icon {
-    width: 44px;
-    height: 44px;
+    width: 44px; height: 44px;
     border-radius: 11px;
     display: flex;
     align-items: center;
@@ -188,11 +330,7 @@
     letter-spacing: -0.2px;
   }
 
-  .module-desc {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.55;
-  }
+  .module-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
 
   .module-footer {
     display: flex;
@@ -243,10 +381,12 @@
   }
 
   @media (max-width: 640px) {
-    .hero { padding: 24px 0 20px; }
-    .hero-left h1 { font-size: 24px; }
-    .live-time { font-size: 20px; }
+    .hero { padding: 20px 0 18px; }
+    .hero-text h1 { font-size: 22px; }
+    .profile-photo { width: 56px; height: 56px; }
+    .profile-initials { font-size: 18px; }
     .module-grid { grid-template-columns: 1fr; }
+    .quote-text { font-size: 14px; }
   }
 </style>
 </head>
@@ -268,21 +408,39 @@
   </div>
 </nav>
 
-<!-- ─── Page ─── -->
 <div class="cc-page">
 
+  <!-- ─── Hero ─── -->
   <div class="hero">
-    <div class="hero-left">
-      <h1>Welcome back, Jackson 👋</h1>
-      <div class="date-line" id="heroDate">Loading…</div>
-    </div>
-    <div class="hero-right">
-      <div class="live-time" id="liveTime">--:--</div>
-      <div class="live-time-label">Mountain Time</div>
+    <div class="hero-profile">
+      <div class="profile-photo" id="profilePhoto">
+        <img src="images/jackson.jpg" alt="Jackson" onerror="this.style.display='none';document.getElementById('profileInitials').style.display='flex';">
+        <span class="profile-initials" id="profileInitials" style="display:none;">JL</span>
+      </div>
+      <div class="hero-text">
+        <h1>Welcome back, Jackson 👋</h1>
+        <div class="date-line" id="heroDate">Loading…</div>
+      </div>
     </div>
   </div>
 
-  <!-- Alert chips — reads stats from latest briefing -->
+  <!-- ─── Motivational Quote ─── -->
+  <div class="quote-card">
+    <div class="quote-tag" id="quoteTag">💡 discipline</div>
+    <div class="quote-body">
+      <blockquote class="quote-text" id="quoteText">"Discipline is the bridge between goals and accomplishment."</blockquote>
+      <div class="quote-right">
+        <cite class="quote-author" id="quoteAuthor">— Jim Rohn</cite>
+        <div class="quote-controls">
+          <div class="quote-dots" id="quoteDots"></div>
+          <button class="quote-btn" onclick="prevQuote()">‹</button>
+          <button class="quote-btn" onclick="nextQuote()">›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Alert chips ─── -->
   <div class="alert-bar">
     <a class="alert-chip" href="briefs/latest.html">
       <div class="chip-dot" style="background: var(--purple)"></div>
@@ -403,36 +561,101 @@
 </div>
 
 <script>
-  function updateClock() {
-    const now = new Date();
-    const mt = new Intl.DateTimeFormat('en-US', {
-      timeZone: 'America/Denver',
-      hour: 'numeric', minute: '2-digit', hour12: true
-    }).format(now);
-    document.getElementById('liveTime').textContent = mt;
-
+  // ─── Date ───
+  function updateDate() {
     const dateStr = new Intl.DateTimeFormat('en-US', {
       timeZone: 'America/Denver',
       weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-    }).format(now);
+    }).format(new Date());
     document.getElementById('heroDate').textContent = dateStr;
     document.getElementById('footerDate').textContent = dateStr;
   }
-  updateClock();
-  setInterval(updateClock, 30000);
+  updateDate();
 
+  // ─── Quotes ───
+  const QUOTES = [
+    { text: "Discipline is the bridge between goals and accomplishment.", author: "Jim Rohn", theme: "💪 discipline", ai: false },
+    { text: "The only way to do great work is to love what you do.", author: "Steve Jobs", theme: "🔥 passion", ai: false },
+    { text: "Every deal you close is proof that discipline outlasts doubt.", author: "Claude", theme: "💰 money · discipline", ai: true },
+    { text: "The best way to predict the future is to create it.", author: "Peter Drucker", theme: "🌊 change", ai: false },
+    { text: "Your work doesn't just generate revenue — it changes how businesses understand their customers.", author: "Claude", theme: "🌍 impact", ai: true },
+    { text: "Wealth is not about having a lot of money; it's about having a lot of options.", author: "Chris Rock", theme: "💰 money", ai: false },
+    { text: "Passion without structure is a dream. Discipline without passion is survival. Together, they're unstoppable.", author: "Claude", theme: "🔥 passion · discipline", ai: true },
+    { text: "Be the change you wish to see in the world.", author: "Mahatma Gandhi", theme: "🌊 change · impact", ai: false },
+    { text: "Money follows value. Create enough of it, and the rest takes care of itself.", author: "Claude", theme: "💰 money · impact", ai: true },
+    { text: "The secret of getting ahead is getting started.", author: "Mark Twain", theme: "💪 discipline", ai: false },
+    { text: "You're not just closing deals — you're opening futures.", author: "Claude", theme: "🌍 impact · passion", ai: true },
+    { text: "The gap between where you are and where you want to be is closed one conversation at a time.", author: "Claude", theme: "🌊 change · discipline", ai: true },
+  ];
+
+  let qIndex = 0;
+  let qTimer = null;
+
+  function renderQuote(idx, animate) {
+    const q = QUOTES[idx];
+    const textEl = document.getElementById('quoteText');
+    const authorEl = document.getElementById('quoteAuthor');
+    const tagEl = document.getElementById('quoteTag');
+
+    if (animate) {
+      textEl.classList.add('fading');
+      setTimeout(() => {
+        textEl.textContent = '\u201C' + q.text + '\u201D';
+        authorEl.innerHTML = '— ' + q.author + (q.ai ? ' <span class="ai-badge">AI</span>' : '');
+        tagEl.textContent = q.theme;
+        textEl.classList.remove('fading');
+      }, 350);
+    } else {
+      textEl.textContent = '\u201C' + q.text + '\u201D';
+      authorEl.innerHTML = '— ' + q.author + (q.ai ? ' <span class="ai-badge">AI</span>' : '');
+      tagEl.textContent = q.theme;
+    }
+
+    // Dots
+    const dotsEl = document.getElementById('quoteDots');
+    dotsEl.innerHTML = QUOTES.map((_, i) =>
+      `<div class="quote-dot ${i===idx?'active':''}" onclick="goQuote(${i})"></div>`
+    ).join('');
+  }
+
+  function nextQuote() {
+    qIndex = (qIndex + 1) % QUOTES.length;
+    renderQuote(qIndex, true);
+    resetTimer();
+  }
+
+  function prevQuote() {
+    qIndex = (qIndex - 1 + QUOTES.length) % QUOTES.length;
+    renderQuote(qIndex, true);
+    resetTimer();
+  }
+
+  function goQuote(i) {
+    qIndex = i;
+    renderQuote(qIndex, true);
+    resetTimer();
+  }
+
+  function resetTimer() {
+    clearInterval(qTimer);
+    qTimer = setInterval(nextQuote, 18000);
+  }
+
+  // Start on a random quote
+  qIndex = Math.floor(Math.random() * QUOTES.length);
+  renderQuote(qIndex, false);
+  resetTimer();
+
+  // ─── Briefing stats ───
   async function loadStats() {
     try {
       const resp = await fetch('manifest.json?t=' + Date.now());
       const data = await resp.json();
       const briefs = (data.briefings || []).sort((a,b) => b.date.localeCompare(a.date));
-      if (briefs.length === 0) return;
-
-      const latest = briefs[0];
-      document.getElementById('valBriefDate').textContent = latest.label || latest.date;
-
+      if (!briefs.length) return;
+      document.getElementById('valBriefDate').textContent = briefs[0].label || briefs[0].date;
       try {
-        const bResp = await fetch(latest.file + '?t=' + Date.now());
+        const bResp = await fetch(briefs[0].file + '?t=' + Date.now());
         const html = await bResp.text();
         const doc = new DOMParser().parseFromString(html, 'text/html');
         doc.querySelectorAll('.stat-chip').forEach(chip => {
@@ -448,7 +671,7 @@
           else if (/slack/i.test(label))  document.getElementById('valSlack').textContent = val;
           else if (/action/i.test(label)) document.getElementById('valActions').textContent = val;
         });
-      } catch(e) { /* briefing not readable same-origin on some setups */ }
+      } catch(e) {}
     } catch(e) { console.warn('Could not load manifest:', e); }
   }
   loadStats();

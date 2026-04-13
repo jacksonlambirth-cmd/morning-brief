@@ -440,4 +440,19 @@
           let label = '', val = '';
           spans.forEach(s => {
             if (s.classList.contains('val')) val = s.textContent.trim();
-            else if (!s.classList.contains('dot')) label
+            else if (!s.classList.contains('dot')) label = s.textContent.trim();
+          });
+          if (!val) return;
+          if (/meeting/i.test(label))     document.getElementById('valMeetings').textContent = val;
+          else if (/email/i.test(label))  document.getElementById('valEmails').textContent = val;
+          else if (/slack/i.test(label))  document.getElementById('valSlack').textContent = val;
+          else if (/action/i.test(label)) document.getElementById('valActions').textContent = val;
+        });
+      } catch(e) { /* briefing not readable same-origin on some setups */ }
+    } catch(e) { console.warn('Could not load manifest:', e); }
+  }
+  loadStats();
+</script>
+
+</body>
+</html>
